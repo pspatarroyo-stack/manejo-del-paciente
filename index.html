@@ -1,9 +1,11 @@
+<body>
+
 <script>
 var password = "consumo";
 var input = prompt("Ingrese la clave de acceso:");
 
-if (input !== password) {
-    alert("Clave incorrecta");
+if (input === null || input !== password) {
+    alert("Acceso denegado");
     window.location = "https://google.com";
 }
 </script>
