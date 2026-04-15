@@ -1,0 +1,3496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metodología Manejo Consumo Problemático de Opioides</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --teal: #00a896;
+    --teal-light: #02c9b3;
+    --amber: #f4a261;
+    --red: #e63946;
+    --green: #2d9e6b;
+    --slate: #1e2d3d;
+    --slate2: #263547;
+    --muted: #7a90a4;
+    --text: #e8f0f7;
+    --text-dim: #b0c4d4;
+    --border: rgba(255,255,255,0.08);
+    --card: rgba(255,255,255,0.04);
+    --card-hover: rgba(0,168,150,0.1);
+    --radius: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* BACKGROUND TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 10% 0%, rgba(0,168,150,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 100%, rgba(13,27,42,0.8) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid var(--border);
+    padding: 28px 48px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(13,27,42,0.7);
+    backdrop-filter: blur(12px);
+  }
+
+  .logo-mark {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    box-shadow: 0 0 20px rgba(0,168,150,0.3);
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+  }
+
+  header p {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .badge {
+    margin-left: auto;
+    background: rgba(0,168,150,0.15);
+    border: 1px solid rgba(0,168,150,0.3);
+    color: var(--teal-light);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 48px 80px;
+  }
+
+  /* STAGE NAVIGATION */
+  .stages-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 40px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .stage-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .stage-btn:hover {
+    border-color: var(--teal);
+    color: var(--text);
+    background: var(--card-hover);
+  }
+
+  .stage-btn.active {
+    background: linear-gradient(135deg, var(--teal), var(--teal-light));
+    border-color: transparent;
+    color: var(--navy);
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(0,168,150,0.3);
+  }
+
+  .stage-btn .num {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .stage-btn.active .num {
+    background: rgba(13,27,42,0.25);
+  }
+
+  /* STAGE PANELS */
+  .stage-panel { display: none; }
+  .stage-panel.active { display: block; animation: fadeIn 0.35s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  .stage-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .stage-icon.teal { background: rgba(0,168,150,0.15); border: 1px solid rgba(0,168,150,0.3); }
+  .stage-icon.amber { background: rgba(244,162,97,0.15); border: 1px solid rgba(244,162,97,0.3); }
+  .stage-icon.red { background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.3); }
+  .stage-icon.green { background: rgba(45,158,107,0.15); border: 1px solid rgba(45,158,107,0.3); }
+  .stage-icon.purple { background: rgba(160,110,255,0.15); border: 1px solid rgba(160,110,255,0.3); }
+
+  .section-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.9rem;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  .section-header p {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 6px;
+    max-width: 600px;
+  }
+
+  /* CARDS GRID */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    transition: all 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(0,168,150,0.25);
+    background: var(--card-hover);
+    transform: translateY(-2px);
+  }
+
+  .card-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .card p, .card li {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .card ul {
+    padding-left: 16px;
+    margin-top: 6px;
+  }
+
+  .card ul li { margin-bottom: 4px; }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 24px 0;
+    position: relative;
+  }
+
+  .flow-step {
+    display: flex;
+    gap: 0;
+    position: relative;
+  }
+
+  .flow-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 48px;
+    flex-shrink: 0;
+  }
+
+  .flow-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--teal);
+    border: 3px solid var(--navy);
+    outline: 2px solid var(--teal);
+    flex-shrink: 0;
+    margin-top: 18px;
+    z-index: 1;
+  }
+
+  .flow-dot.amber { background: var(--amber); outline-color: var(--amber); }
+  .flow-dot.red { background: var(--red); outline-color: var(--red); }
+  .flow-dot.green { background: var(--green); outline-color: var(--green); }
+  .flow-dot.purple { background: #a06eff; outline-color: #a06eff; }
+
+  .flow-line {
+    width: 2px;
+    flex: 1;
+    background: linear-gradient(to bottom, var(--teal), rgba(0,168,150,0.1));
+    min-height: 20px;
+  }
+
+  .flow-content {
+    flex: 1;
+    padding: 14px 18px;
+    margin: 8px 0;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: all 0.2s;
+  }
+
+  .flow-content:hover {
+    border-color: rgba(0,168,150,0.25);
+    background: var(--card-hover);
+  }
+
+  .flow-content h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .flow-content p {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  /* DECISION BOX */
+  .decision-block {
+    background: rgba(244,162,97,0.06);
+    border: 1px solid rgba(244,162,97,0.25);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+
+  .decision-block .decision-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--amber);
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .decision-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .decision-option {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+
+  .decision-option .tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+
+  .tag-low { background: rgba(45,158,107,0.2); color: #4ecb8d; }
+  .tag-med { background: rgba(244,162,97,0.2); color: var(--amber); }
+  .tag-high { background: rgba(230,57,70,0.2); color: #f27480; }
+
+  .decision-option h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .decision-option p { font-size: 12px; color: var(--text-dim); }
+
+  /* TOOL TAGS */
+  .tools-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .tool-tag {
+    background: rgba(0,168,150,0.1);
+    border: 1px solid rgba(0,168,150,0.25);
+    color: var(--teal-light);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .tool-tag.warn {
+    background: rgba(244,162,97,0.1);
+    border-color: rgba(244,162,97,0.25);
+    color: var(--amber);
+  }
+
+  .tool-tag.danger {
+    background: rgba(230,57,70,0.1);
+    border-color: rgba(230,57,70,0.25);
+    color: #f27480;
+  }
+
+  /* ALERT BOX */
+  .alert {
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 16px 0;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13.5px;
+  }
+
+  .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .alert strong { display: block; font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+
+  .alert.info {
+    background: rgba(0,168,150,0.08);
+    border: 1px solid rgba(0,168,150,0.2);
+    color: var(--text-dim);
+  }
+
+  .alert.warn {
+    background: rgba(244,162,97,0.08);
+    border: 1px solid rgba(244,162,97,0.2);
+    color: var(--text-dim);
+  }
+
+  .alert.danger {
+    background: rgba(230,57,70,0.08);
+    border: 1px solid rgba(230,57,70,0.2);
+    color: var(--text-dim);
+  }
+
+  /* TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 16px 0;
+  }
+
+  .data-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--teal);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .data-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-dim);
+    vertical-align: top;
+  }
+
+  .data-table tr:hover td {
+    background: rgba(0,168,150,0.04);
+    color: var(--text);
+  }
+
+  /* ACCORDION */
+  .accordion { margin: 12px 0; }
+
+  .accordion-header {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .accordion-header:hover {
+    border-color: rgba(0,168,150,0.25);
+    background: var(--card-hover);
+  }
+
+  .accordion-header.open {
+    border-color: rgba(0,168,150,0.3);
+    background: rgba(0,168,150,0.06);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .accordion-header h4 { font-size: 14px; font-weight: 600; flex: 1; }
+  .accordion-header .chevron { color: var(--muted); transition: transform 0.2s; font-style: normal; }
+  .accordion-header.open .chevron { transform: rotate(180deg); color: var(--teal); }
+
+  .accordion-body {
+    display: none;
+    background: rgba(0,168,150,0.03);
+    border: 1px solid rgba(0,168,150,0.2);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 18px 22px;
+  }
+
+  .accordion-body.open { display: block; animation: fadeIn 0.2s ease; }
+  .accordion-body p, .accordion-body li { font-size: 13.5px; color: var(--text-dim); line-height: 1.65; }
+  .accordion-body ul { padding-left: 18px; margin-top: 8px; }
+  .accordion-body ul li { margin-bottom: 5px; }
+
+  /* TWO-COL */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  @media (max-width: 700px) {
+    main { padding: 24px 20px 60px; }
+    header { padding: 20px 24px; }
+    .two-col { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .stages-nav { gap: 6px; }
+    .badge { display: none; }
+  }
+
+  /* PROGRESS BAR */
+  .progress-tracker {
+    display: flex;
+    gap: 0;
+    margin-bottom: 36px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .progress-item {
+    flex: 1;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .progress-item:last-child { border-right: none; }
+  .progress-item:hover { background: var(--card-hover); }
+  .progress-item.done { background: rgba(0,168,150,0.06); }
+
+  .pi-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: var(--muted);
+  }
+
+  .progress-item.done .pi-num {
+    background: rgba(0,168,150,0.2);
+    border-color: var(--teal);
+    color: var(--teal-light);
+  }
+
+  .progress-item.current .pi-num {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: var(--navy);
+    box-shadow: 0 0 10px rgba(0,168,150,0.4);
+  }
+
+  .pi-label { font-size: 12px; font-weight: 500; color: var(--muted); }
+  .progress-item.done .pi-label,
+  .progress-item.current .pi-label { color: var(--text); }
+
+  @media (max-width: 700px) {
+    .progress-tracker { flex-wrap: wrap; }
+    .progress-item { min-width: 50%; border-right: none; border-bottom: 1px solid var(--border); }
+    .pi-label { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">⚕</div>
+  <div>
+    <h1>Metodología Manejo Consumo Problemático de Opioides</h1>
+    <p>Ministerio de Salud y Protección Social · Fondo Nacional de Estupefacientes</p>
+  </div>
+  <span class="badge">Uso Profesional</span>
+</header>
+
+<main>
+
+  <!-- STAGE NAV -->
+  <div class="stages-nav">
+    <button class="stage-btn active" onclick="showStage(5, this)" style="background:linear-gradient(135deg,rgba(0,168,150,0.2),rgba(2,201,179,0.15)); border-color:rgba(0,168,150,0.4); color:var(--teal-light)"><span class="num" style="background:rgba(0,168,150,0.25)">⬡</span> Algoritmo Interactivo</button>
+    <button class="stage-btn" onclick="showStage(0, this)"><span class="num">1</span> Preingreso y Acceso</button>
+    <button class="stage-btn" onclick="showStage(1, this)"><span class="num">2</span> Evaluación Inicial</button>
+    <button class="stage-btn" onclick="showStage(2, this)"><span class="num">3</span> Valoración Integral</button>
+    <button class="stage-btn" onclick="showStage(3, this)"><span class="num">4</span> Tratamiento</button>
+    <button class="stage-btn" onclick="showStage(4, this)"><span class="num">5</span> Egreso y Continuidad</button>
+    <button class="stage-btn" onclick="showStage(6, this)" style="background:rgba(160,110,255,0.08); border-color:rgba(160,110,255,0.25); color:#c4a0ff"><span class="num" style="background:rgba(160,110,255,0.2)">📎</span> Anexos</button>
+    <button class="stage-btn" onclick="showStage(7, this)" style="background:rgba(45,158,107,0.08); border-color:rgba(45,158,107,0.25); color:#4ecb8d"><span class="num" style="background:rgba(45,158,107,0.2)">🧪</span> Anexos Clínicos</button>
+  </div>
+
+  <!-- STAGE 1: PREINGRESO -->
+  <div class="stage-panel" id="stage-0">
+    <div class="section-header">
+      <div class="stage-icon teal">🚪</div>
+      <div>
+        <h2>Preingreso y Acceso al Sistema</h2>
+        <p>Puertas de entrada y rutas de canalización hacia IPS habilitadas para el manejo del TCO.</p>
+      </div>
+    </div>
+
+    <div class="alert warn">
+      <span class="alert-icon">⚠</span>
+      <div>
+        <strong>Puntos Críticos de Control</strong>
+        Verificar: confirmación de recepción (cita, cama, contacto) · canal de comunicación entre IPS · responsable del caso (gestor o referente) · registro en H.C.
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-label">Vías de Acceso</div>
+        <h3>Canales de Entrada</h3>
+        <ul>
+          <li><strong>Demanda espontánea</strong> — consulta voluntaria</li>
+          <li><strong>Urgencias</strong> — síndrome de abstinencia agudo o riesgo vital</li>
+          <li><strong>Remisión institucional</strong> — EPS / IPS / EAP</li>
+          <li><strong>Reingreso</strong> — paciente previamente atendido</li>
+          <li><strong>Dispositivos comunitarios</strong> — CAMAD / programas territoriales</li>
+          <li><strong>Sistema intersectorial</strong> — judicial, protección social, educativo</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Ruta Administrativa</div>
+        <h3>5 Pasos de Ingreso</h3>
+        <ol style="padding-left:18px; margin-top:6px;">
+          <li style="margin-bottom:6px;color:var(--text-dim);font-size:13.5px"><strong style="color:var(--text)">Cita Medicina General / Urgencias</strong> — puerta de entrada</li>
+          <li style="margin-bottom:6px;color:var(--text-dim);font-size:13.5px"><strong style="color:var(--text)">Valoración Especialista</strong> — Psiquiatría o Toxicología</li>
+          <li style="margin-bottom:6px;color:var(--text-dim);font-size:13.5px"><strong style="color:var(--text)">Orden Médica</strong> — desintoxicación, metadona o internación</li>
+          <li style="margin-bottom:6px;color:var(--text-dim);font-size:13.5px"><strong style="color:var(--text)">Autorización EPS</strong> — máx. 5 días hábiles por ley</li>
+          <li style="margin-bottom:6px;color:var(--text-dim);font-size:13.5px"><strong style="color:var(--text)">Asignación IPS</strong> — red prestadora habilitada</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="decision-block">
+      <div class="decision-title">⬡ Decisión: ¿La IPS tiene capacidad resolutiva?</div>
+      <div class="decision-grid">
+        <div class="decision-option">
+          <span class="tag tag-low">SÍ</span>
+          <h4>IPS con Capacidad</h4>
+          <p>Proceder a evaluación inicial (tamizaje ASSIST) y verificar deseo de tratamiento del paciente.</p>
+        </div>
+        <div class="decision-option">
+          <span class="tag tag-high">NO</span>
+          <h4>Remisión Garantizada</h4>
+          <p>Remisión a IPS con capacidad: asistida, trazable y con confirmación de recepción documentada.</p>
+        </div>
+        <div class="decision-option">
+          <span class="tag tag-med">URGENCIA VITAL</span>
+          <h4>Estabilización Inmediata</h4>
+          <p>Hospitalización urgente. Manejo de urgencia acorde al protocolo. Prioridad absoluta sobre trámites administrativos.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert danger">
+      <span class="alert-icon">🔴</span>
+      <div>
+        <strong>Riesgo en Preingreso</strong>
+        Lo más común: espera para cita/autorización, falta de IPS disponible → riesgo de abandono temprano y pérdida del paciente del sistema.
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 2: EVALUACIÓN INICIAL -->
+  <div class="stage-panel" id="stage-1">
+    <div class="section-header">
+      <div class="stage-icon amber">🔍</div>
+      <div>
+        <h2>Evaluación Inicial (Tamizaje)</h2>
+        <p>Identificación temprana del consumo problemático y determinación del deseo de tratamiento.</p>
+      </div>
+    </div>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-label">Herramienta Principal</div>
+        <h3>ASSIST</h3>
+        <p>Prueba de detección de consumo de Alcohol, Tabaco y Sustancias. Identifica si existe consumo problemático y los riesgos asociados.</p>
+        <div class="tools-row" style="margin-top:12px">
+          <span class="tool-tag">Aplicación inicial</span>
+          <span class="tool-tag">Todas las sustancias</span>
+          <span class="tool-tag">Riesgo bajo/medio/alto</span>
+        </div>
+        <button class="annexe-link-btn" onclick="goToAnexo('assist')" style="margin-top:12px;">📎 Ver escala ASSIST completa → Anexos</button>
+      </div>
+      <div class="card">
+        <div class="card-label">Verificación Clínica</div>
+        <h3>¿Cumple Criterios TCO por DSM-5 / CIE-10?</h3>
+        <p>Determinación diagnóstica formal. Si cumple criterios: registro en H.C. bajo CIE-10 (F11.2) y evaluación de severidad ASAM/ISA.</p>
+        <div class="tools-row" style="margin-top:12px">
+          <button class="criteria-expand-btn" onclick="toggleCriteria('dsm5-panel')">📖 DSM-5 — Ver criterios</button>
+          <button class="criteria-expand-btn cie" onclick="toggleCriteria('cie10-panel')">📖 CIE-10 — Ver criterios</button>
+          <span class="tool-tag warn">Registro obligatorio H.C.</span>
+        </div>
+        <div id="dsm5-panel" class="criteria-panel" style="display:none; margin-top:14px;">
+          <div style="font-size:11px; font-weight:700; color:var(--teal); text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px;">DSM-5 — Criterios TCO (≥2 en 12 meses)</div>
+          <ol style="padding-left:18px; font-size:13px; color:var(--text-dim); line-height:1.7;">
+            <li>Consumo en cantidades mayores o durante más tiempo del previsto</li>
+            <li>Deseos persistentes o esfuerzos fallidos de controlar el consumo</li>
+            <li>Mucho tiempo dedicado a obtener, consumir o recuperarse del opioide</li>
+            <li>Craving: deseo intenso o urgente de consumir</li>
+            <li>Incumplimiento de obligaciones laborales, escolares o familiares</li>
+            <li>Consumo continuado pese a problemas sociales o interpersonales</li>
+            <li>Abandono de actividades sociales, laborales o recreativas</li>
+            <li>Consumo recurrente en situaciones de riesgo físico</li>
+            <li>Consumo continuado pese a conocer problemas físicos o psicológicos</li>
+            <li><strong style="color:var(--text)">Tolerancia</strong>: necesidad de más cantidad para el mismo efecto</li>
+            <li><strong style="color:var(--text)">Abstinencia</strong>: síndrome de abstinencia o consumo para evitarlo</li>
+          </ol>
+          <div style="margin-top:10px; display:flex; gap:6px; flex-wrap:wrap;">
+            <span class="tool-tag">Leve: 2–3 criterios</span>
+            <span class="tool-tag warn">Moderado: 4–5 criterios</span>
+            <span class="tool-tag danger">Grave: ≥6 criterios</span>
+          </div>
+        </div>
+        <div id="cie10-panel" class="criteria-panel" style="display:none; margin-top:14px;">
+          <div style="font-size:11px; font-weight:700; color:#c4a0ff; text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px;">CIE-10 — Síndrome de Dependencia de Opioides (F11.2)</div>
+          <p style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">Tres o más de los siguientes criterios presentes durante el último año:</p>
+          <ol style="padding-left:18px; font-size:13px; color:var(--text-dim); line-height:1.7;">
+            <li>Deseo intenso o compulsión de consumir la sustancia (craving)</li>
+            <li>Dificultades para controlar el inicio, fin o nivel de consumo</li>
+            <li>Síndrome de abstinencia al reducir o cesar el consumo</li>
+            <li><strong style="color:var(--text)">Tolerancia</strong>: necesidad de dosis más altas para lograr los mismos efectos</li>
+            <li>Abandono progresivo de intereses y actividades alternativas</li>
+            <li>Persistencia en el consumo pese a evidencia de consecuencias dañinas</li>
+          </ol>
+          <div style="margin-top:10px; padding:10px 12px; background:rgba(160,110,255,0.08); border:1px solid rgba(160,110,255,0.2); border-radius:8px; font-size:12.5px; color:var(--text-dim);">
+            <strong style="color:#c4a0ff">Código CIE-10:</strong> F11.2 — Trastornos mentales y del comportamiento debidos al uso de opiáceos: Síndrome de dependencia. Para reporte ante el sistema de salud colombiano.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Sin criterios TCO</div>
+        <h3>Manejo de Riesgo / Intervención Breve</h3>
+        <p>Para pacientes que no cumplen criterios diagnósticos plenos: intervención motivacional, psicoeducación y seguimiento.</p>
+        <div class="tools-row" style="margin-top:12px">
+          <span class="tool-tag">Entrevista motivacional</span>
+          <span class="tool-tag">Psicoeducación</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert info">
+      <span class="alert-icon">ℹ</span>
+      <div>
+        <strong>¿No desea tratamiento?</strong>
+        Si el paciente no expresa deseo de tratamiento, aplicar estrategia de reducción de riesgos y daños (RRD), consejería breve y dejar abierto el vínculo con el sistema de salud.
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 3: VALORACIÓN INTEGRAL -->
+  <div class="stage-panel" id="stage-2">
+    <div class="section-header">
+      <div class="stage-icon purple">🧠</div>
+      <div>
+        <h2>Valoración Integral</h2>
+        <p>Evaluación biopsicosocial multidimensional por equipo interdisciplinario. Base para el plan de manejo.</p>
+      </div>
+    </div>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-label">Dimensión Médica</div>
+        <h3>Examen Físico</h3>
+        <ul>
+          <li>Historia clínica completa</li>
+          <li>Examen físico integral</li>
+          <li>Escala <button class="inline-link-btn" onclick="goToAnexo('cows')">COWS</button> (síndrome de abstinencia)</li>
+          <li>Toxicología (tipo y vía de administración)</li>
+          <li>Comorbilidades médicas (dolor crónico, infecciones)</li>
+          <li>Evaluación de inyectables: escala <button class="inline-link-btn" onclick="goToAnexo('assist')">ASSIST</button></li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Dimensión Psicológica</div>
+        <h3>Examen Mental</h3>
+        <ul>
+          <li>Estado mental y funciones cognitivas</li>
+          <li>ISA-6 (Índice de Severidad de la Adicción)</li>
+          <li>Screening de patología dual</li>
+          <li>Riesgo suicida u homicida</li>
+          <li>Craving: intensidad e impacto</li>
+          <li>Historia de trauma</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Dimensión Social</div>
+        <h3>Contexto Psicosocial</h3>
+        <ul>
+          <li>Red de apoyo familiar y social</li>
+          <li>Situación laboral y habitacional</li>
+          <li>Genograma/familiograma</li>
+          <li>Determinantes sociales adversos</li>
+          <li>Vulnerabilidades de género, etnia, edad</li>
+          <li>Vinculación con sistema judicial</li>
+          <li><button class="inline-link-btn" onclick="goToAnexo('apgar')">APGAR Familiar</button> — percepción de funcionamiento familiar</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin: 24px 0 12px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--teal); font-weight:600">Casos Especiales — Protocolos Diferenciados</div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>💊</span>
+        <h4>Paciente con Dolor Crónico y TCO</h4>
+        <i class="chevron">▼</i>
+      </div>
+      <div class="accordion-body">
+        <div style="background:rgba(244,162,97,0.08); border:1px solid rgba(244,162,97,0.25); border-radius:8px; padding:12px 14px; margin-bottom:12px; font-size:13px; color:var(--text-dim);">
+          <strong style="color:var(--amber)">⚕ Roles clínicos en Colombia:</strong> El <strong style="color:var(--text)">Médico General o el Psiquiatra</strong> son los responsables de mantener la formulación analgésica del paciente. Ante complejidad del manejo del dolor, deben <strong style="color:var(--text)">solicitar interconsulta a Clínica del Dolor</strong> para garantizar un abordaje especializado.
+        </div>
+        <p>Distinguir entre <strong>dependencia física</strong> (adaptación neurobiológica normal ante uso crónico) y <strong>trastorno por consumo</strong>. Herramientas recomendadas:</p>
+        <ul>
+          <li><strong>SOAPP-R</strong> o <strong>Opioid Risk Tool (ORT)</strong> para evaluación de riesgo integral</li>
+          <li>Historia clínica detallada del dolor: tipo, localización, frecuencia, intensidad</li>
+          <li>Farmacoterapia: la <strong>metadona</strong> es la primera línea disponible en Colombia y puede tratar ambas condiciones simultáneamente</li>
+          <li>Interconsulta a Clínica del Dolor cuando el manejo del dolor supere la competencia del equipo tratante</li>
+          <li>Equipo interdisciplinario para asegurar tratamiento del dolor apropiado minimizando riesgo de recaída</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🧩</span>
+        <h4>Paciente con Patología Dual</h4>
+        <i class="chevron">▼</i>
+      </div>
+      <div class="accordion-body">
+        <div style="background:rgba(160,110,255,0.08); border:1px solid rgba(160,110,255,0.25); border-radius:8px; padding:12px 14px; margin-bottom:12px; font-size:13px; color:var(--text-dim);">
+          <strong style="color:#c4a0ff">⚕ Rol del Psiquiatra (habilitación requerida):</strong> Por requisito de habilitación de las IPS, el <strong style="color:var(--text)">Psiquiatra es el profesional indicado</strong> para liderar el tratamiento de la patología dual. Es quien evalúa, diagnostica y dirige el manejo simultáneo del TCO y el trastorno psiquiátrico asociado.
+        </div>
+        <p>Coexistencia de TCO y trastorno psiquiátrico (depresión, trastorno bipolar, esquizofrenia, ansiedad). Prioridades:</p>
+        <ul>
+          <li>Evaluar ideación suicida u homicida al ingreso — si se confirma: <strong>hospitalización inmediata</strong></li>
+          <li>Estabilizar con metadona primero; reevaluar estado mental tras estabilización mediante examen detallado del estado mental</li>
+          <li>Ambos trastornos deben tratarse <strong>simultáneamente</strong> — estándar de cuidado internacional</li>
+          <li>Alerta por interacciones: <strong>benzodiazepinas + opioides</strong> = riesgo sinérgico de depresión respiratoria</li>
+          <li>Conectar con redes de apoyo comunitario, dispositivos de cuidado comunitario y servicios básicos</li>
+          <li>Evaluar determinantes sociales (desempleo, vivienda inestable) que exacerban ambos trastornos</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🛡</span>
+        <h4>Enfoque de Reducción de Riesgos y Daños (RRD)</h4>
+        <i class="chevron">▼</i>
+      </div>
+      <div class="accordion-body">
+        <p>La abstención <strong>no es un requisito previo</strong> para recibir atención. El enfoque RRD debe incorporarse formalmente cuando:</p>
+        <ul>
+          <li>El paciente prefiere priorizar seguridad sobre cesación inmediata</li>
+          <li>Personas sin hogar, que se inyectan drogas o con riesgo inminente de sobredosis</li>
+          <li>Determinantes sociales estructurales adversos</li>
+          <li>Presencia de riesgo de transmisión de enfermedades infecciosas</li>
+        </ul>
+        <p style="margin-top:10px">Componentes: educación sobre sobredosis, orientación sobre prácticas de menor riesgo, acceso a servicios básicos y dispositivos comunitarios.</p>
+        <div style="margin-top:10px; padding:10px 14px; background:rgba(230,57,70,0.07); border:1px solid rgba(230,57,70,0.2); border-radius:8px; font-size:12.5px; color:var(--text-dim);">
+          <strong style="color:#f27480">⚠ Nota contexto Colombia — Naloxona:</strong> La indicación de naloxona para uso domiciliario no es pertinente en el contexto colombiano de consumo. Su uso está indicado para el <strong>manejo hospitalario de sobredosis por opioides inyectables</strong>, en entornos institucionales con supervisión clínica.
+        </div>
+      </div>
+    </div>
+
+    <div class="alert info">
+      <span class="alert-icon">🔬</span>
+      <div>
+        <strong>Herramientas de Severidad</strong>
+        <button class="inline-link-btn" onclick="goToAnexo('assist')">ASSIST</button> · ISA-6 (Índice de Severidad de la Adicción) · <button class="inline-link-btn" onclick="goToAnexo('asam')">ASAM</button> (American Society of Addiction Medicine) · <button class="inline-link-btn" onclick="goToAnexo('cows')">COWS</button> (Opioid Withdrawal Scale). Resultados determinan el nivel de cuidado requerido.
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 4: TRATAMIENTO -->
+  <div class="stage-panel" id="stage-3">
+    <div class="section-header">
+      <div class="stage-icon amber">⚗</div>
+      <div>
+        <h2>Tratamiento Especializado</h2>
+        <p>Intervención integral biopsicosocial. Combinación de farmacoterapia, psicoterapia y soporte social.</p>
+      </div>
+    </div>
+
+    <div class="decision-block">
+      <div class="decision-title">⬡ Nivel de Cuidado según Severidad (<button class="inline-link-btn" onclick="goToAnexo('asam')">ASAM</button>)</div>
+      <div class="decision-grid">
+        <div class="decision-option">
+          <span class="tag tag-low">BAJO</span>
+          <h4>Intervención Breve / Ambulatorio</h4>
+          <p>Pacientes con bajo riesgo o estables. Metas progresivas, reducción de dosis, seguimiento periódico.</p>
+        </div>
+        <div class="decision-option">
+          <span class="tag tag-med">MEDIO–ALTO</span>
+          <h4>Hospital Día</h4>
+          <p>Atención ambulatoria intensiva. El paciente permanece durante el día, regresa a casa por la noche.</p>
+        </div>
+        <div class="decision-option">
+          <span class="tag tag-high">ALTO</span>
+          <h4>Internación Hospitalaria</h4>
+          <p>Alta severidad, riesgo inminente de sobredosis, patología dual grave o inducción farmacológica supervisada.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--amber); font-weight:600; margin-bottom:12px">Tratamiento Farmacológico con Agonistas Opioides (TAO)</div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Medicamento</th>
+              <th>Indicación</th>
+              <th>Consideración</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--text)">Metadona</strong></td>
+              <td>Primera línea TCO. Dolor crónico + TCO</td>
+              <td>Monopolio del Estado. Titulación supervisada</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--text)">Buprenorfina</strong></td>
+              <td>Agonista parcial. Uso internacional para farmacodependencia</td>
+              <td>⚠ Sin disponibilidad en Colombia para TCO. No existen formas farmacéuticas autorizadas para esta indicación en el país</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--text)">Naltrexona</strong></td>
+              <td>Antagonista. Prevención recaída</td>
+              <td>Requiere abstinencia previa completa</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--text)">Clonidina</strong></td>
+              <td>Sintomático. Sin acceso a metadona</td>
+              <td>No es TAO; manejo sintomático de abstinencia</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--text)">Naloxona</strong></td>
+              <td>Antagonista opiáceo. Sobredosis por opioides inyectables</td>
+              <td>Uso hospitalario e institucional. En Colombia no aplica indicación de uso domiciliario</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:12px; padding:12px 16px; background:rgba(244,162,97,0.08); border:1px solid rgba(244,162,97,0.3); border-radius:8px; display:flex; gap:10px; align-items:flex-start;">
+          <span style="font-size:16px; flex-shrink:0;">📌</span>
+          <p style="font-size:13px; color:var(--text-dim); line-height:1.6; margin:0;"><strong style="color:var(--amber);">Indicación FNE:</strong> Por disposición del Fondo Nacional de Estupefacientes, la metadona se puede prescribir por un máximo de <strong style="color:var(--text);">30 días</strong> por prescripción.</p>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--teal); font-weight:600; margin-bottom:12px">Intervención Psicoterapéutica</div>
+
+        <div class="accordion">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>🧩</span>
+            <h4>Terapia Cognitivo-Conductual (TCC)</h4>
+            <i class="chevron">▼</i>
+          </div>
+          <div class="accordion-body">
+            <ul>
+              <li><strong>Control fisiológico:</strong> respiración diafragmática, relajación muscular progresiva</li>
+              <li><strong>Jerarquía de estímulos:</strong> lista de disparadores ordenados por intensidad</li>
+              <li><strong>Desensibilización:</strong> exposición gradual en imaginación y en vivo</li>
+              <li><strong>Control del craving:</strong> detención del pensamiento, distracción activa</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion" style="margin-top:8px">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>🗣</span>
+            <h4>Entrevista Motivacional</h4>
+            <i class="chevron">▼</i>
+          </div>
+          <div class="accordion-body">
+            <p>Fortalece el compromiso del paciente con el cambio. Especialmente útil en primeras 8 semanas — extiende significativamente el tiempo de adherencia farmacológica.</p>
+          </div>
+        </div>
+
+        <div class="accordion" style="margin-top:8px">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span>👨‍👩‍👧</span>
+            <h4>Terapia Familiar y Grupal</h4>
+            <i class="chevron">▼</i>
+          </div>
+          <div class="accordion-body">
+            <ul>
+              <li>Sesiones de participación familiar activa</li>
+              <li>Grupos de apoyo entre pares</li>
+              <li>Prevención de recaídas: análisis funcional, habilidades de rechazo</li>
+              <li>Actividades de terapia ocupacional y proyecto de vida</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--teal); font-weight:600; margin-bottom:12px">Indicadores de Efectividad del Tratamiento</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-label">Indicador 1</div>
+        <h3>Retención</h3>
+        <p>Permanencia en el programa. Predictor más robusto de éxito: estar en TAO reduce mortalidad entre <strong>66% y 80%</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Indicador 2</div>
+        <h3>Funcionalidad</h3>
+        <p>Capacidad de reintegración social, familiar y laboral. El éxito real incluye funcionalidad, incluso sin abstinencia total.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Indicador 3</div>
+        <h3>Adherencia</h3>
+        <p>Asistencia a citas médicas, psicológicas y sociales + cumplimiento farmacológico. Psicoterapia en primeras 8 semanas mejora adherencia.</p>
+      </div>
+      <div class="card">
+        <div class="card-label">Indicador 4</div>
+        <h3>Recaídas</h3>
+        <p>Monitoreo de episodios de retorno al consumo. No estigmatizar — cada recaída requiere reevaluación integral del plan.</p>
+      </div>
+    </div>
+
+    <div class="alert warn">
+      <span class="alert-icon">♻</span>
+      <div>
+        <strong>Manejo de Reingresos por Recaída</strong>
+        No retomar el plan anterior automáticamente. Realizar nueva valoración integral, distinguir recaída puntual de consumo intermitente, evaluar dosis insuficiente o patología psiquiátrica subyacente. Aplicar enfoque de reducción de daños sin estigmatizar.
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 5: EGRESO -->
+  <div class="stage-panel" id="stage-4">
+    <div class="section-header">
+      <div class="stage-icon green">🔄</div>
+      <div>
+        <h2>Egreso y Continuidad del Cuidado</h2>
+        <p>El egreso no implica finalizar el tratamiento, sino transitar hacia modalidades ambulatorias escalonadas según el nivel de riesgo del paciente.</p>
+      </div>
+    </div>
+
+    <!-- EVALUACIÓN PREVIA AL EGRESO: 4 dominios -->
+    <div style="margin-bottom:10px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--teal); font-weight:700">Evaluación Previa al Egreso — 4 Dominios</div>
+    <div class="alert info" style="margin-bottom:20px;">
+      <span class="alert-icon">ℹ</span>
+      <div>Previo al tránsito entre etapas del tratamiento para TCO se debe hacer una evaluación integral clínica y psicosocial. Esta evaluación permite estratificar el nivel de riesgo y definir la modalidad de egreso y seguimiento más apropiada.</div>
+    </div>
+
+    <div class="cards-grid" style="margin-bottom:24px;">
+      <div class="card" style="border-color:rgba(0,168,150,0.3); background:rgba(0,168,150,0.05)">
+        <div class="card-label">Dominio 1</div>
+        <h3>Estado Clínico: Estabilidad / Comorbilidades</h3>
+        <ul>
+          <li>Estabilidad clínica sostenida y control de síntomas de abstinencia</li>
+          <li>Dosis TAO estabilizada, sin eventos adversos relevantes</li>
+          <li>Parámetros clínicos generales y salud física (VIH, Hepatitis, ETS, enf. hepáticas/renales)</li>
+          <li>Comorbilidades psiquiátricas: depresión, patología dual, ansiedad, trastornos de personalidad</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(244,162,97,0.3); background:rgba(244,162,97,0.04)">
+        <div class="card-label" style="color:var(--amber)">Dominio 2</div>
+        <h3>Evolución del Consumo: Adherencia / Craving</h3>
+        <ul>
+          <li>Grado de adherencia a intervenciones terapéuticas (presencial o virtual)</li>
+          <li>Cumplimiento del tratamiento farmacológico en periodos definidos</li>
+          <li>Intensidad del craving y consumo reciente de opioides u otras SPA</li>
+          <li>Craving persistente o consumo reciente indica mayor vulnerabilidad a recaída</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(230,57,70,0.3); background:rgba(230,57,70,0.04)">
+        <div class="card-label" style="color:#f27480">Dominio 3</div>
+        <h3>Riesgo: Desencadenantes / Recaída y Sobredosis</h3>
+        <ul>
+          <li>Historia previa de recaídas, duración de abstinencia y desencadenantes</li>
+          <li>Habilidades de afrontamiento ante situaciones de riesgo</li>
+          <li>Riesgo de sobredosis: pérdida de tolerancia tras abstinencia</li>
+          <li>Consumo concomitante de depresores del SNC (benzodiacepinas, alcohol)</li>
+          <li>Antecedentes de sobredosis previas y acceso a atención médica</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(160,110,255,0.3); background:rgba(160,110,255,0.04)">
+        <div class="card-label" style="color:#c4a0ff">Dominio 4</div>
+        <h3>Entorno: Soporte Familiar / Determinantes Sociales</h3>
+        <ul>
+          <li>Determinantes sociales: vivienda, empleo, educación, acceso a servicios</li>
+          <li>Existencia y calidad de la red de apoyo familiar y comunitaria</li>
+          <li>Genograma para evaluar dinámica familiar y patrones de consumo</li>
+          <li>Red de apoyo adecuada favorece continuidad; su ausencia incrementa riesgo de abandono, recaída y sobredosis</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PLAN INDIVIDUALIZADO DE EGRESO -->
+    <div style="margin-bottom:10px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--teal); font-weight:700">Plan Individualizado de Egreso</div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>📋</span><h4>Diagnóstico y Resumen Clínico</h4><i class="chevron">▼</i>
+      </div>
+      <div class="accordion-body">
+        <p>El plan de egreso debe incluir un resumen clínico detallado que comprenda:</p>
+        <ul>
+          <li>Diagnóstico principal y diagnósticos asociados (CIE-10)</li>
+          <li>Antecedentes relevantes de consumo de sustancias</li>
+          <li>Comorbilidades médicas y psiquiátricas identificadas</li>
+          <li>Intervenciones terapéuticas realizadas y respuesta clínica</li>
+          <li>Evolución del craving y de los síntomas de abstinencia</li>
+          <li>Eventos adversos o complicaciones durante el tratamiento</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🗓</span><h4>Cronograma de Controles Post-Egreso</h4><i class="chevron">▼</i>
+      </div>
+      <div class="accordion-body">
+        <div class="alert warn" style="margin-bottom:14px;">
+          <span class="alert-icon">⚠</span>
+          <div><strong>Frecuencia recomendada de seguimiento</strong> La frecuencia debe adaptarse al nivel de riesgo individual. Las frecuencias orientativas son:</div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Período</th><th>Frecuencia recomendada</th><th>Tipo de control</th></tr></thead>
+          <tbody>
+            <tr><td><strong style="color:var(--text)">Mes 1</strong></td><td>Semanal</td><td>Médico + psicológico + monitoreo toxicológico</td></tr>
+            <tr><td><strong style="color:var(--text)">Meses 2–3</strong></td><td>Quincenal</td><td>Médico + psicológico + evaluación de adherencia</td></tr>
+            <tr><td><strong style="color:var(--text)">Meses posteriores</strong></td><td>Mensual</td><td>Médico + valoración del riesgo de recaída</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>💊</span><h4>Continuidad Farmacológica (si aplica)</h4><i class="chevron">▼</i>
+      </div>
+      <div class="accordion-body">
+        <ul>
+          <li>Mantenimiento con <strong>metadona</strong> u otros TAO disponibles cuando esté indicado</li>
+          <li>Inclusión de clonidina u otro medicamento de apoyo según evolución</li>
+          <li>Ajuste o titulación de dosis según evolución clínica</li>
+          <li>Manejo farmacológico de comorbilidades psiquiátricas</li>
+          <li>Tratamiento del dolor crónico si está presente (interconsulta a Clínica del Dolor)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🛡</span><h4>Plan de Prevención de Recaídas</h4><i class="chevron">▼</i>
+      </div>
+      <div class="accordion-body">
+        <ul>
+          <li>Identificación de desencadenantes de consumo (ambientales y emocionales)</li>
+          <li>Educación en manejo del craving y técnicas de distracción activa</li>
+          <li>Fortalecimiento de redes de apoyo familiar y comunitaria</li>
+          <li>Terapia Cognitivo-Conductual (TCC): habilidades de afrontamiento y asertividad</li>
+          <li>Educación sobre sobredosis: signos, factores de riesgo (pérdida de tolerancia, polisumo), importancia de atención médica inmediata</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>🔁</span><h4>Ruta de Reingreso al Tratamiento</h4><i class="chevron">▼</i>
+      </div>
+      <div class="accordion-body">
+        <p style="margin-bottom:10px;">El plan debe establecer una ruta clara y accesible de reingreso en caso de recaída o deterioro clínico. El objetivo es evitar que una recaída se traduzca en pérdida prolongada del seguimiento.</p>
+        <ul>
+          <li>Puntos de contacto definidos dentro del sistema de salud</li>
+          <li>Mecanismos de referencia rápida a servicios especializados</li>
+          <li>Acceso prioritario a tratamiento farmacológico (TAO)</li>
+          <li>Articulación entre IPS, aseguradores y servicios territoriales</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- MODALIDADES DE TRANSICIÓN -->
+    <div style="margin: 24px 0 12px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--teal); font-weight:700">Modalidades de Transición Ambulatoria</div>
+
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-label">Modalidad 1</div>
+        <h3>Seguimiento Ambulatorio Estándar</h3>
+        <p style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">Pacientes clínicamente estables. Frecuencia progresivamente más espaciada según evolución.</p>
+        <ul>
+          <li>Controles médicos y psicológicos periódicos</li>
+          <li>Monitoreo toxicológico</li>
+          <li>Continuidad TAO cuando esté indicado</li>
+          <li>Evaluación de adherencia y funcionalidad social</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Modalidad 2</div>
+        <h3>Hospital Día (Ambulatorio Intensivo)</h3>
+        <p style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">Riesgo moderado de recaída. ASSIST 4–26 y/o criterios ASAM nivel 2.1–2.5.</p>
+        <ul>
+          <li>Mayor intensidad terapéutica sin hospitalización</li>
+          <li>Control de comorbilidad psiquiátrica</li>
+          <li>Seguimiento de recaída reciente</li>
+          <li>Apoyo ante red de apoyo limitada</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Modalidad 3</div>
+        <h3>Telemedicina y Atención Híbrida</h3>
+        <p style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">Pacientes con estabilidad clínica sostenida y adherencia al tratamiento. Especialmente útil con barreras geográficas.</p>
+        <ul>
+          <li>Controles clínicos y psicoterapia a distancia</li>
+          <li>Entrevista motivacional virtual</li>
+          <li>Seguimiento de adherencia y educación en recaídas</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Modalidad 4</div>
+        <h3>Programas de Mantenimiento TAO</h3>
+        <p style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">Objetivo: estabilizar la dependencia, reducir recaídas, disminuir mortalidad y mejorar funcionamiento social.</p>
+        <ul>
+          <li>Metadona u otros TAO disponibles según evolución</li>
+          <li>Duración prolongada dependiendo de la evolución clínica</li>
+          <li>Revisión periódica de dosis y tolerancia</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Modalidad 5</div>
+        <h3>Reducción de Riesgos y Daños (RRD)</h3>
+        <p style="font-size:13px; color:var(--text-dim); margin-bottom:8px;">Especialmente en pacientes con alto riesgo de recaída.</p>
+        <ul>
+          <li>Educación sobre sobredosis y reconocimiento de signos</li>
+          <li>Disponibilidad de naloxona (uso institucional supervisado)</li>
+          <li>Orientación sobre consumo más seguro</li>
+          <li>Acompañamiento comunitario y redes de pares</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RED DE CONTINUIDAD -->
+    <div style="margin: 24px 0 12px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--teal); font-weight:700">Red de Continuidad del Cuidado</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-label">Servicios de Salud</div>
+        <h3>Atención Institucional</h3>
+        <ul>
+          <li>Urgencias / APS (Atención Primaria en Salud)</li>
+          <li>Consulta externa especializada</li>
+          <li>Programas de dolor crónico</li>
+          <li>IPS (otros niveles asistenciales)</li>
+          <li>Programas de salud mental</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Dispositivos Comunitarios</div>
+        <h3>Recursos del Territorio</h3>
+        <ul>
+          <li>CAMAD (Centros de Atención Móvil a Drogodependientes)</li>
+          <li>Programas territoriales de reducción de daños</li>
+          <li>Comunidades terapéuticas habilitadas</li>
+          <li>Grupos de apoyo y autoayuda / apoyo de pares</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-label">Sistema Intersectorial</div>
+        <h3>Articulación Interinstitucional</h3>
+        <ul>
+          <li>Sistema judicial / Entidades de protección social</li>
+          <li>Instituciones educativas y laborales</li>
+          <li>EPS / EAPB (aseguramiento de continuidad)</li>
+          <li>Acceso directo: demanda espontánea o reingreso</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="alert info" style="margin-top:20px;">
+      <span class="alert-icon">🔗</span>
+      <div>
+        <strong>"Aseguramiento de la Continuidad" — Requisitos Mínimos</strong>
+        Confirmación de recepción (cita, cama o contacto) · Canal de comunicación formal entre IPS · Responsable del caso identificado (gestor o referente) · Remisión con trazabilidad documentada.
+      </div>
+    </div>
+
+    <div class="accordion" style="margin-top:16px">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <span>📊</span>
+        <h4>Indicadores de Seguimiento Post-Egreso</h4>
+        <i class="chevron">▼</i>
+      </div>
+      <div class="accordion-body">
+        <table class="data-table">
+          <thead>
+            <tr><th>Indicador</th><th>Qué mide</th><th>Fuente</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong style="color:var(--text)">Efectividad</strong></td><td>Logro de objetivos terapéuticos, reducción de mortalidad, calidad de vida</td><td>Valoración integral</td></tr>
+            <tr><td><strong style="color:var(--text)">Retención en tratamiento</strong></td><td>Permanencia continua en el programa (TAO reduce mortalidad 66–80%)</td><td>Registro H.C.</td></tr>
+            <tr><td><strong style="color:var(--text)">Funcionalidad social</strong></td><td>Desempeño laboral, familiar y social post-tratamiento</td><td>ISA-6 de seguimiento</td></tr>
+            <tr><td><strong style="color:var(--text)">Adherencia</strong></td><td>Asistencia a citas + cumplimiento farmacológico</td><td>Registro asistencial</td></tr>
+            <tr><td><strong style="color:var(--text)">Recaídas</strong></td><td>Episodios de retorno al consumo ilícito u otras SPA</td><td>Monitoreo toxicológico</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER NOTE -->
+  <div style="margin-top:48px; padding-top:24px; border-top:1px solid var(--border); display:flex; gap:16px; align-items:flex-start">
+    <span style="font-size:20px">📄</span>
+    <div>
+      <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); font-weight:600; margin-bottom:4px">Fuente Documental</div>
+      <p style="font-size:13px; color:var(--text-dim)">Documento Metodológico para el Manejo del Consumo Problemático de Opioides. Ministerio de Salud y Protección Social · Fondo Nacional de Estupefacientes (FNE) · Proyecto de Inversión BPIN202300000000351-1905. Aprobado por CEMIN 21-2024 · Instituto Nacional de Salud de Colombia. Construido a partir de métodos mixtos: investigación cualitativa, encuesta cuantitativa a profesionales de salud y revisión sistemática.</p>
+      <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap">
+        <span class="tool-tag">Uso exclusivo profesional</span>
+        <span class="tool-tag">Psiquiatría · Psicología · Medicina</span>
+        <span class="tool-tag">Trabajo Social · T. Ocupacional</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 6: INTERACTIVE ALGORITHM -->
+  <div class="stage-panel active" id="stage-5">
+    <div class="section-header">
+      <div class="stage-icon teal">⬡</div>
+      <div>
+        <h2>Algoritmo Interactivo de Decisión</h2>
+        <p>Siga el flujo respondiendo cada pregunta. El sistema lo guiará por la ruta clínica correcta según el algoritmo oficial.</p>
+      </div>
+    </div>
+
+    <div id="algo-container">
+      <!-- Progress path -->
+      <div id="algo-path" style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:24px; min-height:32px;"></div>
+
+      <!-- Active node card -->
+      <div id="algo-node"></div>
+
+      <!-- Info panel -->
+      <div id="algo-info" style="margin-top:20px;"></div>
+    </div>
+  </div>
+
+  <!-- STAGE 7: ANEXOS -->
+  <div class="stage-panel" id="stage-6">
+    <div class="section-header">
+      <div class="stage-icon purple">📎</div>
+      <div>
+        <h2>Anexos — Escalas e Instrumentos Clínicos</h2>
+        <p>Herramientas de tamizaje, evaluación de abstinencia y criterios de ubicación utilizados en la metodología.</p>
+      </div>
+    </div>
+
+    <!-- ASSIST -->
+    <div id="anexo-assist" class="anexo-block">
+      <div class="anexo-header">
+        <div class="anexo-icon" style="background:rgba(0,168,150,0.15); border-color:rgba(0,168,150,0.3);">📋</div>
+        <div>
+          <div class="anexo-tag">Tamizaje</div>
+          <h3 class="anexo-title">ASSIST v3.1 — Prueba de Detección de Consumo de Alcohol, Tabaco y Sustancias</h3>
+          <p class="anexo-sub">Alcohol, Smoking and Substance Involvement Screening Test · OMS · Versión en español</p>
+        </div>
+      </div>
+
+      <div class="alert info" style="margin-bottom:20px;">
+        <span class="alert-icon">ℹ</span>
+        <div><strong>Uso clínico</strong> El ASSIST v3.1 se debe utilizar como 'filtro' para fines clínicos. Para fines de investigación, utilice la versión ASSIST V3.0. Aplíquelo al inicio de todo proceso de evaluación de consumo de SPA.</div>
+      </div>
+
+      <div class="anexo-section-title">Pregunta 1 — Consumo alguna vez en la vida (sin receta médica)</div>
+      <table class="data-table">
+        <thead><tr><th>Sustancia</th><th>No</th><th>Sí</th></tr></thead>
+        <tbody>
+          <tr><td>a. Tabaco (cigarrillos, tabaco de mascar, puros, etc.)</td><td>0</td><td>✓</td></tr>
+          <tr><td>b. Bebidas alcohólicas (cerveza, vinos, licores, etc.)</td><td>0</td><td>✓</td></tr>
+          <tr><td>c. Cannabis (marihuana, mota, hierba, hachís, etc.)</td><td>0</td><td>✓</td></tr>
+          <tr><td>d. Cocaína (coca, crack, etc.)</td><td>0</td><td>✓</td></tr>
+          <tr><td>e. Estimulantes de tipo anfetamina (speed, éxtasis, etc.)</td><td>0</td><td>✓</td></tr>
+          <tr><td>f. Inhalantes (óxido nitroso, pegamento, gasolina, etc.)</td><td>0</td><td>✓</td></tr>
+          <tr><td>g. Sedantes o pastillas para dormir (diazepam, alprazolam, etc.)</td><td>0</td><td>✓</td></tr>
+          <tr><td>h. Alucinógenos (LSD, ácidos, hongos, ketamina, etc.)</td><td>0</td><td>✓</td></tr>
+          <tr><td><strong>i. Opiáceos (heroína, morfina, metadona, buprenorfina, codeína, etc.)</strong></td><td>0</td><td>✓</td></tr>
+          <tr><td>j. Otras, especifique:</td><td>0</td><td>✓</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12.5px; color:var(--text-dim); margin:8px 0 20px; font-style:italic;">Si todas las respuestas fueron negativas: "¿Ni siquiera cuando estaba en la escuela?" Si negativa para todas → detener entrevista. Si afirmativa para cualquiera → continuar con P2 para cada sustancia consumida.</p>
+
+      <div class="anexo-section-title">Preguntas 2–7 — Últimos tres meses (por cada sustancia con P1 = Sí)</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Pregunta</th><th>Nunca</th><th>1–2 veces</th><th>Mensual</th><th>Semanal</th><th>Diario/casi</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>P2.</strong> ¿Con qué frecuencia ha consumido?</td><td>0</td><td>2</td><td>3</td><td>4</td><td>6</td></tr>
+          <tr><td><strong>P3.</strong> ¿Con qué frecuencia ha sentido deseo o ansias de consumir?</td><td>0</td><td>3</td><td>4</td><td>5</td><td>6</td></tr>
+          <tr><td><strong>P4.</strong> ¿Con qué frecuencia su consumo le causó problemas de salud, sociales, legales o económicos?</td><td>0</td><td>4</td><td>5</td><td>6</td><td>7</td></tr>
+          <tr><td><strong>P5.</strong> ¿Con qué frecuencia dejó de hacer lo que habitualmente se esperaba por el consumo?</td><td>0</td><td>5</td><td>6</td><td>7</td><td>8</td></tr>
+        </tbody>
+      </table>
+      <table class="data-table" style="margin-top:8px;">
+        <thead><tr><th>Pregunta</th><th>No, nunca</th><th>Sí, últimos 3 meses</th><th>Sí, pero no en últimos 3 meses</th></tr></thead>
+        <tbody>
+          <tr><td><strong>P6.</strong> ¿Un amigo, familiar o alguien más ha mostrado preocupación por sus hábitos de consumo?</td><td>0</td><td>6</td><td>3</td></tr>
+          <tr><td><strong>P7.</strong> ¿Ha intentado reducir o eliminar el consumo y no lo ha logrado?</td><td>0</td><td>6</td><td>3</td></tr>
+        </tbody>
+      </table>
+
+      <div class="anexo-section-title" style="margin-top:20px;">Pregunta 8 — Consumo por vía inyectada (sin receta médica)</div>
+      <div class="alert warn" style="margin-bottom:16px;">
+        <span class="alert-icon">⚠</span>
+        <div><strong>Nota importante:</strong> A los usuarios que se han inyectado drogas en los últimos 3 meses se les debe preguntar sobre sus hábitos de inyección. Si inyectó ≤4 días/mes → intervención breve con información sobre riesgos. Si inyectó &gt;4 días/mes → evaluación adicional y tratamiento más intensivo.</div>
+      </div>
+
+      <div class="anexo-section-title" style="margin-top:20px;">Puntuación e interpretación — Opiáceos (ítem i)</div>
+      <div class="decision-grid" style="margin-top:10px;">
+        <div class="decision-option">
+          <span class="tag tag-low">0 – 3</span>
+          <h4>No requiere intervención</h4>
+          <p>Registrar puntuación. Sin acción adicional requerida en este momento.</p>
+        </div>
+        <div class="decision-option">
+          <span class="tag tag-med">4 – 26</span>
+          <h4>Intervención breve</h4>
+          <p>Consejería breve estructurada. Proporcionar tarjeta de retroalimentación ASSIST.</p>
+        </div>
+        <div class="decision-option">
+          <span class="tag tag-high">27 +</span>
+          <h4>Tratamiento más intensivo</h4>
+          <p>Derivación a evaluación diagnóstica completa (DSM-5/CIE-10) y tratamiento especializado.</p>
+        </div>
+      </div>
+      <p style="font-size:12px; color:var(--muted); margin-top:12px; font-style:italic;">Cálculo: Sumar P2i + P3i + P4i + P5i + P6i + P7i. No incluir P1 ni P8 en la suma.</p>
+
+      <div class="anexo-section-title" style="margin-top:24px;">🖊 Calificador Interactivo — Opiáceos</div>
+      <div class="interactive-tool-card">
+        <p style="font-size:13px; color:var(--text-dim); margin-bottom:16px;">Seleccione la respuesta para cada pregunta referida a opiáceos (heroína, morfina, metadona, codeína, etc.) en los <strong>últimos 3 meses</strong>.</p>
+
+        <div class="itc-q">
+          <div class="itc-q-text">P2. ¿Con qué frecuencia ha consumido opiáceos?</div>
+          <div class="itc-options">
+            <label class="itc-opt"><input type="radio" name="assist_p2" value="0"> <span>Nunca (0)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p2" value="2"> <span>1–2 veces (2)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p2" value="3"> <span>Mensualmente (3)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p2" value="4"> <span>Semanalmente (4)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p2" value="6"> <span>Diario/casi (6)</span></label>
+          </div>
+        </div>
+        <div class="itc-q">
+          <div class="itc-q-text">P3. ¿Con qué frecuencia ha sentido deseo intenso o ansias de consumir opiáceos?</div>
+          <div class="itc-options">
+            <label class="itc-opt"><input type="radio" name="assist_p3" value="0"> <span>Nunca (0)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p3" value="3"> <span>1–2 veces (3)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p3" value="4"> <span>Mensualmente (4)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p3" value="5"> <span>Semanalmente (5)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p3" value="6"> <span>Diario/casi (6)</span></label>
+          </div>
+        </div>
+        <div class="itc-q">
+          <div class="itc-q-text">P4. ¿Con qué frecuencia el consumo le causó problemas de salud, sociales, legales o económicos?</div>
+          <div class="itc-options">
+            <label class="itc-opt"><input type="radio" name="assist_p4" value="0"> <span>Nunca (0)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p4" value="4"> <span>1–2 veces (4)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p4" value="5"> <span>Mensualmente (5)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p4" value="6"> <span>Semanalmente (6)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p4" value="7"> <span>Diario/casi (7)</span></label>
+          </div>
+        </div>
+        <div class="itc-q">
+          <div class="itc-q-text">P5. ¿Con qué frecuencia dejó de hacer lo que habitualmente se esperaba de usted por el consumo?</div>
+          <div class="itc-options">
+            <label class="itc-opt"><input type="radio" name="assist_p5" value="0"> <span>Nunca (0)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p5" value="5"> <span>1–2 veces (5)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p5" value="6"> <span>Mensualmente (6)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p5" value="7"> <span>Semanalmente (7)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p5" value="8"> <span>Diario/casi (8)</span></label>
+          </div>
+        </div>
+        <div class="itc-q">
+          <div class="itc-q-text">P6. ¿Un amigo, familiar o alguien más ha mostrado preocupación por sus hábitos de consumo de opiáceos?</div>
+          <div class="itc-options">
+            <label class="itc-opt"><input type="radio" name="assist_p6" value="0"> <span>No, nunca (0)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p6" value="6"> <span>Sí, en últimos 3 meses (6)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p6" value="3"> <span>Sí, pero no en últimos 3 meses (3)</span></label>
+          </div>
+        </div>
+        <div class="itc-q">
+          <div class="itc-q-text">P7. ¿Ha intentado alguna vez reducir o eliminar el consumo de opiáceos y no lo ha logrado?</div>
+          <div class="itc-options">
+            <label class="itc-opt"><input type="radio" name="assist_p7" value="0"> <span>No, nunca (0)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p7" value="6"> <span>Sí, en últimos 3 meses (6)</span></label>
+            <label class="itc-opt"><input type="radio" name="assist_p7" value="3"> <span>Sí, pero no en últimos 3 meses (3)</span></label>
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calcAssist()">Calcular puntaje ASSIST</button>
+        <button class="reset-btn" onclick="resetTool('assist')">↺ Reiniciar</button>
+        <div id="assist-result" class="itc-result" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--border); margin: 32px 0;"></div>
+
+    <!-- COWS -->
+    <div id="anexo-cows" class="anexo-block">
+      <div class="anexo-header">
+        <div class="anexo-icon" style="background:rgba(244,162,97,0.15); border-color:rgba(244,162,97,0.3);">📐</div>
+        <div>
+          <div class="anexo-tag" style="background:rgba(244,162,97,0.15); color:var(--amber);">Escala clínica</div>
+          <h3 class="anexo-title">COWS — Clinical Opiate Withdrawal Scale</h3>
+          <p class="anexo-sub">Escala de abstinencia clínica de opioides · Para evaluación durante inducción TAO y seguimiento</p>
+        </div>
+      </div>
+
+      <div class="alert info" style="margin-bottom:20px;">
+        <span class="alert-icon">ℹ</span>
+        <div><strong>Instrucciones:</strong> Para cada ítem, registre el número que mejor describe los signos o síntomas del paciente. Califique solo en relación con la abstinencia de opioides. Registre en los tiempos: T0 (basal), 30 min, 2 horas, y según evolución clínica.</div>
+      </div>
+
+      <div class="cows-grid" id="cows-interactive">
+        <div class="cows-item">
+          <div class="cows-item-title">1. Frecuencia cardíaca en reposo <span class="cows-note">(después de 1 min sentado/acostado)</span></div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_1" value="0"> ≤80 lpm → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_1" value="1"> 81–100 lpm → 1</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_1" value="2"> 101–120 lpm → 2</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_1" value="4"> &gt;120 lpm → 4</label>
+          </div>
+        </div>
+        <div class="cows-item">
+          <div class="cows-item-title">2. Sudoración <span class="cows-note">(últimos 30 min)</span></div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_2" value="0"> Sin escalofríos/rubor → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_2" value="1"> Reporte subjetivo → 1</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_2" value="2"> Cara enrojecida/húmeda → 2</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_2" value="3"> Gotas en frente → 3</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_2" value="4"> Sudor chorreando → 4</label>
+          </div>
+        </div>
+        <div class="cows-item">
+          <div class="cows-item-title">3. Inquietud <span class="cows-note">(observación)</span></div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_3" value="0"> Puede sentarse quieto → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_3" value="1"> Dificultad pero lo logra → 1</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_3" value="3"> Movimientos frecuentes → 3</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_3" value="5"> No puede estar quieto → 5</label>
+          </div>
+        </div>
+        <div class="cows-item">
+          <div class="cows-item-title">4. Tamaño pupilar</div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_4" value="0"> Puntiforme o normal → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_4" value="1"> Posiblemente dilatada → 1</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_4" value="2"> Moderadamente dilatada → 2</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_4" value="5"> Solo borde del iris visible → 5</label>
+          </div>
+        </div>
+        <div class="cows-item">
+          <div class="cows-item-title">5. Dolores óseos / articulares</div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_5" value="0"> Ausente → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_5" value="1"> Malestar leve difuso → 1</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_5" value="2"> Dolor severo difuso → 2</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_5" value="4"> Se frota, no puede sentarse → 4</label>
+          </div>
+        </div>
+        <div class="cows-item">
+          <div class="cows-item-title">6. Rinorrea / Lagrimeo</div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_6" value="0"> Ausente → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_6" value="1"> Congestión/ojos húmedos → 1</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_6" value="2"> Nariz llorando/lagrimeo → 2</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_6" value="4"> Nariz/lágrimas constantes → 4</label>
+          </div>
+        </div>
+        <div class="cows-item">
+          <div class="cows-item-title">7. Malestar GI <span class="cows-note">(últimos 30 min)</span></div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_7" value="0"> Sin síntomas GI → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_7" value="1"> Cólicos estomacales → 1</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_7" value="2"> Náuseas o heces blandas → 2</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_7" value="3"> Vómito o diarrea → 3</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_7" value="5"> Múltiples episodios → 5</label>
+          </div>
+        </div>
+        <div class="cows-item">
+          <div class="cows-item-title">8. Temblor <span class="cows-note">(manos extendidas)</span></div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_8" value="0"> Sin temblor → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_8" value="1"> Se siente, no se ve → 1</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_8" value="2"> Leve, visible → 2</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_8" value="4"> Temblor grueso/fasciculaciones → 4</label>
+          </div>
+        </div>
+        <div class="cows-item">
+          <div class="cows-item-title">9. Bostezos <span class="cows-note">(observación)</span></div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_9" value="0"> Sin bostezos → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_9" value="1"> 1–2 durante evaluación → 1</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_9" value="2"> 3 o más veces → 2</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_9" value="4"> Varias veces/minuto → 4</label>
+          </div>
+        </div>
+        <div class="cows-item">
+          <div class="cows-item-title">10. Ansiedad / Irritabilidad</div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_10" value="0"> Ninguna → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_10" value="1"> Reporta aumento → 1</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_10" value="2"> Obviamente irritable/ansioso → 2</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_10" value="4"> Dificulta la evaluación → 4</label>
+          </div>
+        </div>
+        <div class="cows-item">
+          <div class="cows-item-title">11. Piel de gallina <span class="cows-note">(observación)</span></div>
+          <div class="cows-input-row">
+            <label class="cows-radio-opt"><input type="radio" name="cows_11" value="0"> Piel lisa → 0</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_11" value="3"> Piloerección palpable → 3</label>
+            <label class="cows-radio-opt"><input type="radio" name="cows_11" value="5"> Piloerección prominente → 5</label>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:20px;">
+        <button class="calc-btn" onclick="calcCows()">Calcular puntaje COWS</button>
+        <button class="reset-btn" onclick="resetTool('cows')">↺ Reiniciar</button>
+      </div>
+      <div id="cows-result" class="itc-result" style="display:none; margin-top:16px;"></div>
+      <p style="font-size:12px; color:var(--muted); margin-top:14px; font-style:italic;">Nota: Los ítems 1 y 3 no tienen puntuación para el valor 2. Registrar con iniciales del evaluador y hora de aplicación.</p>
+    </div>
+
+    <div style="border-top:1px solid var(--border); margin: 32px 0;"></div>
+
+    <!-- ASAM -->
+    <div id="anexo-asam" class="anexo-block">
+      <div class="anexo-header">
+        <div class="anexo-icon" style="background:rgba(45,158,107,0.15); border-color:rgba(45,158,107,0.3);">📊</div>
+        <div>
+          <div class="anexo-tag" style="background:rgba(45,158,107,0.15); color:#4ecb8d;">Criterios de ubicación</div>
+          <h3 class="anexo-title">Criterios ASAM — 6 Dimensiones de Evaluación</h3>
+          <p class="anexo-sub">American Society of Addiction Medicine · Guía de entrevista de evaluación multidimensional</p>
+        </div>
+      </div>
+      <div class="alert info" style="margin-bottom:20px;">
+        <span class="alert-icon">ℹ</span>
+        <div><strong>Propósito:</strong> Determinar el nivel de cuidado apropiado (LOC) según la severidad en cada dimensión. A mayor severidad, mayor intensidad de servicios requerida. Si D1, D2 o D3 presentan severidad muy alta, considerar remisión urgente a urgencias o internación.</div>
+      </div>
+      <div class="cards-grid" style="margin-bottom:0;">
+        <div class="card">
+          <div class="card-label" style="color:#4ecb8d;">Dimensión 1</div>
+          <h3>Intoxicación aguda / Potencial de abstinencia</h3>
+          <p>Evalúa riesgo de abstinencia, historial de sobredosis, uso de opioides en últimas 48h, tolerancia y signos actuales.</p>
+          <div class="tools-row"><span class="tool-tag">COWS</span><span class="tool-tag warn">Urgencia si severo</span></div>
+        </div>
+        <div class="card">
+          <div class="card-label" style="color:#4ecb8d;">Dimensión 2</div>
+          <h3>Condiciones biomédicas y complicaciones</h3>
+          <p>Comorbilidades físicas, infecciones (VIH, Hepatitis C/B, TB), dolor crónico, estado de salud general.</p>
+        </div>
+        <div class="card">
+          <div class="card-label" style="color:#4ecb8d;">Dimensión 3</div>
+          <h3>Condiciones emocionales / conductuales / cognitivas</h3>
+          <p>Patología dual, ideación suicida u homicida, síntomas psiquiátricos, estado cognitivo, trauma.</p>
+          <div class="tools-row"><span class="tool-tag danger">Prioridad si severo</span></div>
+        </div>
+        <div class="card">
+          <div class="card-label" style="color:#4ecb8d;">Dimensión 4</div>
+          <h3>Disposición al cambio</h3>
+          <p>Motivación, ambivalencia, etapa de cambio (precontemplación → mantenimiento), cooperación con el tratamiento.</p>
+        </div>
+        <div class="card">
+          <div class="card-label" style="color:#4ecb8d;">Dimensión 5</div>
+          <h3>Potencial de recaída / uso continuado</h3>
+          <p>Historial de recaídas, factores desencadenantes (craving, presión social, emociones difíciles), habilidades de afrontamiento.</p>
+        </div>
+        <div class="card">
+          <div class="card-label" style="color:#4ecb8d;">Dimensión 6</div>
+          <h3>Entorno de recuperación / vida</h3>
+          <p>Vivienda estable, red de apoyo, empleo, entorno de consumo activo, riesgos de seguridad en el hogar.</p>
+        </div>
+      </div>
+      <div style="margin-top:20px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:#4ecb8d; font-weight:600; margin-bottom:10px;">Niveles de Cuidado ASAM según Severidad Combinada</div>
+      <table class="data-table">
+        <thead><tr><th>Nivel</th><th>Descripción</th><th>Tipo de servicio</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:var(--text)">Nivel 4</strong></td><td>D1, D2 o D3 muy severos. Riesgo vital</td><td>Hospitalización médica intensiva</td></tr>
+          <tr><td><strong style="color:var(--text)">Nivel 3.7</strong></td><td>Severo D1/D2/D3. Moderado en ≥2 dimensiones</td><td>Internación con enfermería 24h</td></tr>
+          <tr><td><strong style="color:var(--text)">Nivel 3.5</strong></td><td>Entorno provocador, riesgo de recaída con consecuencias graves</td><td>Residencia clínica intensiva</td></tr>
+          <tr><td><strong style="color:var(--text)">Nivel 3.1</strong></td><td>Riesgo de recaída sin peligro inmediato, sin deterioro cognitivo</td><td>Residencia de baja intensidad</td></tr>
+          <tr><td><strong style="color:var(--text)">Nivel 2.5</strong></td><td>Seguro en comunidad, necesita estructura diaria</td><td>Hospital Día / Hospitalización parcial</td></tr>
+          <tr><td><strong style="color:var(--text)">Nivel 2.1</strong></td><td>Puede practicar habilidades en el "mundo real"</td><td>Ambulatorio intensivo</td></tr>
+          <tr><td><strong style="color:var(--text)">Nivel 1</strong></td><td>Estable, comprometido, necesita monitoreo</td><td>Ambulatorio estándar</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="border-top:1px solid var(--border); margin: 32px 0;"></div>
+
+    <!-- APGAR FAMILIAR -->
+    <div id="anexo-apgar" class="anexo-block">
+      <div class="anexo-header">
+        <div class="anexo-icon" style="background:rgba(244,162,97,0.15); border-color:rgba(244,162,97,0.3);">👨‍👩‍👧</div>
+        <div>
+          <div class="anexo-tag" style="background:rgba(244,162,97,0.15); color:var(--amber);">Dimensión Social</div>
+          <h3 class="anexo-title">APGAR Familiar — Adultos</h3>
+          <p class="anexo-sub">Diseñado por Gabriel Smilkstein (U. Washington, Seattle) · Percepción de satisfacción con el funcionamiento familiar</p>
+        </div>
+      </div>
+      <div class="alert info" style="margin-bottom:20px;">
+        <span class="alert-icon">ℹ</span>
+        <div><strong>Instrucciones:</strong> Familia se define como el/los individuos con quienes el paciente usualmente vive. Si vive solo, corresponde a la persona con quien tiene los lazos emocionales más fuertes. Seleccione una opción por pregunta.</div>
+      </div>
+
+      <div id="apgar-form">
+        <div class="interactive-tool-card">
+          <div class="itc-q" data-tool="apgar" data-q="1">
+            <div class="itc-q-text">1. ¿Se siente satisfecho con la ayuda que recibe de su familia cuando tiene algún problema o necesidad?</div>
+            <div class="itc-options">
+              <label class="itc-opt"><input type="radio" name="apgar_1" value="0"> <span>Nunca</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_1" value="1"> <span>Casi nunca</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_1" value="2"> <span>Algunas veces</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_1" value="3"> <span>Casi siempre</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_1" value="4"> <span>Siempre</span></label>
+            </div>
+          </div>
+          <div class="itc-q" data-tool="apgar" data-q="2">
+            <div class="itc-q-text">2. ¿Se siente satisfecho con la forma en que su familia habla de las cosas y comparte los problemas?</div>
+            <div class="itc-options">
+              <label class="itc-opt"><input type="radio" name="apgar_2" value="0"> <span>Nunca</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_2" value="1"> <span>Casi nunca</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_2" value="2"> <span>Algunas veces</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_2" value="3"> <span>Casi siempre</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_2" value="4"> <span>Siempre</span></label>
+            </div>
+          </div>
+          <div class="itc-q" data-tool="apgar" data-q="3">
+            <div class="itc-q-text">3. ¿Se siente satisfecho con la forma como su familia acepta y apoya sus deseos de emprender nuevas actividades?</div>
+            <div class="itc-options">
+              <label class="itc-opt"><input type="radio" name="apgar_3" value="0"> <span>Nunca</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_3" value="1"> <span>Casi nunca</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_3" value="2"> <span>Algunas veces</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_3" value="3"> <span>Casi siempre</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_3" value="4"> <span>Siempre</span></label>
+            </div>
+          </div>
+          <div class="itc-q" data-tool="apgar" data-q="4">
+            <div class="itc-q-text">4. ¿Se siente satisfecho con la forma como su familia expresa afecto y responde a sus emociones (rabia, tristeza, amor)?</div>
+            <div class="itc-options">
+              <label class="itc-opt"><input type="radio" name="apgar_4" value="0"> <span>Nunca</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_4" value="1"> <span>Casi nunca</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_4" value="2"> <span>Algunas veces</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_4" value="3"> <span>Casi siempre</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_4" value="4"> <span>Siempre</span></label>
+            </div>
+          </div>
+          <div class="itc-q" data-tool="apgar" data-q="5">
+            <div class="itc-q-text">5. ¿Se siente satisfecho con la manera como comparten en su familia el tiempo, los espacios de la casa o el dinero?</div>
+            <div class="itc-options">
+              <label class="itc-opt"><input type="radio" name="apgar_5" value="0"> <span>Nunca</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_5" value="1"> <span>Casi nunca</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_5" value="2"> <span>Algunas veces</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_5" value="3"> <span>Casi siempre</span></label>
+              <label class="itc-opt"><input type="radio" name="apgar_5" value="4"> <span>Siempre</span></label>
+            </div>
+          </div>
+          <button class="calc-btn" onclick="calcApgar()">Calcular resultado</button>
+          <div id="apgar-result" class="itc-result" style="display:none;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- STAGE 8: ANEXOS CLÍNICOS -->
+  <div class="stage-panel" id="stage-7">
+    <div class="section-header">
+      <div class="stage-icon" style="background:rgba(45,158,107,0.15); border:1px solid rgba(45,158,107,0.3); width:56px; height:56px; border-radius:16px; display:grid; place-items:center; font-size:26px; flex-shrink:0;">🧪</div>
+      <div>
+        <h2>Anexos Clínicos — Instrumentos de Tamizaje</h2>
+        <p>Escalas validadas para evaluación de riesgo de uso problemático de opioides en pacientes con dolor crónico. Diligencie cada instrumento y obtenga el resultado automáticamente.</p>
+      </div>
+    </div>
+
+    <!-- ── SOAPP-R ─────────────────────────────────────────────── -->
+    <div id="anexo-soapp" class="anexo-block">
+      <div class="anexo-header">
+        <div class="anexo-icon" style="background:rgba(0,168,150,0.15); border-color:rgba(0,168,150,0.3);">📋</div>
+        <div>
+          <div class="anexo-tag">Tamizaje pre-tratamiento</div>
+          <h3 class="anexo-title">SOAPP-R — Screener and Opioid Assessment for Patients with Pain, Revised</h3>
+          <p class="anexo-sub">Evaluación de opioides para pacientes con dolor, versión revisada · 24 ítems · Escala 0–4</p>
+        </div>
+      </div>
+      <div class="alert info" style="margin-bottom:20px;">
+        <span class="alert-icon">ℹ</span>
+        <div><strong>Instrucciones:</strong> Las siguientes preguntas son para pacientes en tratamiento o considerados para medicación para su dolor. Por favor conteste cada pregunta lo más honestamente posible. No hay respuestas correctas o incorrectas. <em>Este instrumento es calificado exclusivamente por personal de salud, no por el paciente.</em></div>
+      </div>
+
+      <div class="interactive-tool-card">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px;">
+          <div style="font-size:11px; font-weight:700; color:var(--teal); text-transform:uppercase; letter-spacing:.8px;">Pregunta</div>
+          <div style="display:flex; gap:4px; justify-content:space-between; padding:0 2px;">
+            <span style="font-size:11px; color:var(--muted); text-align:center; flex:1;">Nunca<br><span style="color:var(--text-dim); font-weight:700;">0</span></span>
+            <span style="font-size:11px; color:var(--muted); text-align:center; flex:1;">Rara vez<br><span style="color:var(--text-dim); font-weight:700;">1</span></span>
+            <span style="font-size:11px; color:var(--muted); text-align:center; flex:1;">A veces<br><span style="color:var(--text-dim); font-weight:700;">2</span></span>
+            <span style="font-size:11px; color:var(--muted); text-align:center; flex:1;">A menudo<br><span style="color:var(--text-dim); font-weight:700;">3</span></span>
+            <span style="font-size:11px; color:var(--muted); text-align:center; flex:1;">Muy a menudo<br><span style="color:var(--text-dim); font-weight:700;">4</span></span>
+          </div>
+        </div>
+        <div id="soapp-questions"></div>
+        <div style="margin-top:18px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <button class="calc-btn" onclick="calcSoapp()">Calcular resultado SOAPP-R</button>
+          <button class="reset-btn" onclick="resetClinical('soapp')">↺ Reiniciar</button>
+          <span id="soapp-count" style="font-size:13px; color:var(--muted);">0 / 24 respondidas</span>
+        </div>
+        <div id="soapp-result" class="itc-result" style="display:none; margin-top:16px;"></div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--border); margin:32px 0;"></div>
+
+    <!-- ── ORT ────────────────────────────────────────────────── -->
+    <div id="anexo-ort" class="anexo-block">
+      <div class="anexo-header">
+        <div class="anexo-icon" style="background:rgba(244,162,97,0.15); border-color:rgba(244,162,97,0.3);">⚖</div>
+        <div>
+          <div class="anexo-tag" style="color:var(--amber); background:rgba(244,162,97,0.15);">Evaluación de riesgo</div>
+          <h3 class="anexo-title">ORT — Opioid Risk Tool (Escala de Valoración del Riesgo Potencial de Opioides)</h3>
+          <p class="anexo-sub">Adaptado y traducido de Webster LR, Webster R. Pain Med. 2005; 6(6):432 · Puntaje diferenciado por sexo</p>
+        </div>
+      </div>
+      <div class="alert warn" style="margin-bottom:20px;">
+        <span class="alert-icon">⚠</span>
+        <div><strong>Importante:</strong> Seleccione el sexo del paciente antes de responder. Los puntajes varían según sexo biológico. Marque los antecedentes presentes.</div>
+      </div>
+
+      <div class="interactive-tool-card">
+        <div style="margin-bottom:20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <span style="font-size:13px; font-weight:600; color:var(--text);">Sexo del paciente:</span>
+          <label class="itc-opt" style="flex:unset; padding:8px 18px;"><input type="radio" name="ort_sex" value="F" onchange="renderORT()"> <span>Mujer</span></label>
+          <label class="itc-opt" style="flex:unset; padding:8px 18px;"><input type="radio" name="ort_sex" value="M" onchange="renderORT()"> <span>Hombre</span></label>
+        </div>
+        <div id="ort-questions"><p style="font-size:13px; color:var(--muted); font-style:italic;">Seleccione el sexo del paciente para mostrar el formulario.</p></div>
+        <div style="margin-top:18px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <button class="calc-btn" onclick="calcORT()" id="ort-calc-btn" style="display:none;">Calcular resultado ORT</button>
+          <button class="reset-btn" onclick="resetClinical('ort')" style="display:none;" id="ort-reset-btn">↺ Reiniciar</button>
+        </div>
+        <div id="ort-result" class="itc-result" style="display:none; margin-top:16px;"></div>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid var(--border); margin:32px 0;"></div>
+
+    <!-- ── COMM-S ──────────────────────────────────────────────── -->
+    <div id="anexo-comm" class="anexo-block">
+      <div class="anexo-header">
+        <div class="anexo-icon" style="background:rgba(230,57,70,0.12); border-color:rgba(230,57,70,0.3);">📊</div>
+        <div>
+          <div class="anexo-tag" style="color:#f27480; background:rgba(230,57,70,0.12);">Monitoreo durante tratamiento</div>
+          <h3 class="anexo-title">COMM-S — Current Opioid Misuse Measure (versión en español)</h3>
+          <p class="anexo-sub">Mendez-Pino L. et al. Pain Medicine, 2023 · 17 ítems · Últimos 30 días · Para pacientes ya en tratamiento con opioides</p>
+        </div>
+      </div>
+      <div class="alert info" style="margin-bottom:20px;">
+        <span class="alert-icon">ℹ</span>
+        <div><strong>Instrucciones para el paciente:</strong> Las siguientes preguntas son hechas a nuestros pacientes que están tomando opioides para manejar su dolor. Por favor responda cada una de las preguntas con la mayor sinceridad posible. Esta información será confidencial y almacenada en su historial médico. Sus respuestas no van a determinar su tratamiento.</div>
+      </div>
+
+      <div class="interactive-tool-card">
+        <div style="margin-bottom:14px; padding:10px 14px; background:rgba(255,255,255,0.03); border-radius:8px; border:1px solid var(--border);">
+          <p style="font-size:12.5px; color:var(--text-dim);"><strong style="color:var(--text);">Escala de respuesta — En los últimos 30 días:</strong><br>
+          0 = Nunca &nbsp;·&nbsp; 1 = Casi nunca &nbsp;·&nbsp; 2 = A veces &nbsp;·&nbsp; 3 = Casi siempre &nbsp;·&nbsp; 4 = Siempre</p>
+        </div>
+        <div id="comm-questions"></div>
+        <div style="margin-top:18px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <button class="calc-btn" onclick="calcCOMM()">Calcular resultado COMM-S</button>
+          <button class="reset-btn" onclick="resetClinical('comm')">↺ Reiniciar</button>
+          <span id="comm-count" style="font-size:13px; color:var(--muted);">0 / 17 respondidas</span>
+        </div>
+        <div id="comm-result" class="itc-result" style="display:none; margin-top:16px;"></div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<style>
+/* INTERACTIVE TOOL CARDS */
+.interactive-tool-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 26px;
+  margin-top: 8px;
+}
+.itc-q {
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.itc-q:last-of-type { border-bottom: none; }
+.itc-q-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.itc-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.itc-opt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.itc-opt:hover {
+  border-color: var(--teal);
+  color: var(--text);
+  background: var(--card-hover);
+}
+.itc-opt input { display: none; }
+.itc-opt.selected {
+  background: rgba(0,168,150,0.15);
+  border-color: var(--teal);
+  color: var(--teal-light);
+  font-weight: 600;
+}
+.calc-btn {
+  margin-top: 16px;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  border: none;
+  color: var(--navy);
+  padding: 11px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px rgba(0,168,150,0.25);
+}
+.calc-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,168,150,0.35);
+}
+.reset-btn {
+  margin-top: 10px;
+  margin-left: 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.reset-btn:hover { border-color: var(--teal); color: var(--teal-light); }
+.itc-result {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  animation: fadeIn 0.3s ease;
+}
+.itc-result .res-score {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.itc-result .res-label {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.itc-result .res-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.itc-result.res-green { background: rgba(45,158,107,0.1); border: 1px solid rgba(45,158,107,0.3); color: #4ecb8d; }
+.itc-result.res-amber { background: rgba(244,162,97,0.1); border: 1px solid rgba(244,162,97,0.3); color: var(--amber); }
+.itc-result.res-red   { background: rgba(230,57,70,0.1);  border: 1px solid rgba(230,57,70,0.3);  color: #f27480; }
+.itc-result.res-blue  { background: rgba(0,168,150,0.1);  border: 1px solid rgba(0,168,150,0.3);  color: var(--teal-light); }
+
+/* COWS interactive */
+.cows-input-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 6px;
+}
+.cows-radio-opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+.cows-radio-opt:hover { background: rgba(0,168,150,0.06); color: var(--text); }
+.cows-radio-opt input { accent-color: var(--teal); }
+.cows-radio-opt.selected { color: var(--teal-light); font-weight: 600; }
+
+/* ASSIST interactive */
+.assist-q-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  gap: 12px;
+}
+.assist-q-text { font-size: 13px; color: var(--text-dim); flex: 1; }
+.assist-q-btns { display: flex; gap: 6px; flex-shrink: 0; }
+.assist-yesno {
+  padding: 4px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+.assist-yesno.sel-yes { background: rgba(0,168,150,0.15); border-color: var(--teal); color: var(--teal-light); }
+.assist-yesno.sel-no  { background: rgba(230,57,70,0.1);  border-color: rgba(230,57,70,0.4); color: #f27480; }
+
+/* ── Clinical Scales (SOAPP-R, ORT, COMM-S) ── */
+.clinical-q-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.clinical-q-row:last-child { border-bottom: none; }
+.clinical-q-text { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+.clinical-q-num { font-size: 10px; font-weight: 700; color: var(--muted); margin-right: 5px; }
+.scale-opts { display: flex; gap: 3px; flex-shrink: 0; }
+.scale-opt {
+  width: 34px; height: 34px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.14s;
+  display: grid; place-items: center;
+}
+.scale-opt:hover { border-color: var(--teal); color: var(--teal-light); background: rgba(0,168,150,0.1); }
+.scale-opt.selected { background: var(--teal); border-color: var(--teal); color: var(--navy); box-shadow: 0 2px 8px rgba(0,168,150,0.25); }
+.scale-header-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 6px 4px 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.scale-header-labels { display: flex; gap: 3px; }
+.scale-header-lbl { width: 34px; text-align: center; font-size: 10px; color: var(--muted); line-height: 1.3; }
+/* ORT */
+.ort-section { margin-bottom: 20px; }
+.ort-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--amber); margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid rgba(244,162,97,0.2); }
+.ort-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 4px; border-bottom: 1px solid rgba(255,255,255,0.04); gap: 10px; }
+.ort-item:last-child { border-bottom: none; }
+.ort-item-text { font-size: 13px; color: var(--text-dim); flex: 1; }
+.ort-score-badge { font-size: 11px; font-weight: 700; color: var(--amber); background: rgba(244,162,97,0.1); border: 1px solid rgba(244,162,97,0.2); padding: 2px 7px; border-radius: 4px; flex-shrink: 0; min-width: 28px; text-align: center; }
+.ort-checkbox-wrap { display: flex; align-items: center; gap: 7px; flex-shrink: 0; padding-left: 8px; }
+.ort-cb { width: 18px; height: 18px; accent-color: var(--teal); cursor: pointer; }
+
+<style>
+/* ALGO STYLES */
+.algo-card {
+  background: var(--slate);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 32px;
+  max-width: 680px;
+  margin: 0 auto;
+  animation: fadeIn 0.3s ease;
+}
+
+.algo-card.decision { border-color: rgba(244,162,97,0.4); }
+.algo-card.terminal-green { border-color: rgba(45,158,107,0.5); background: rgba(45,158,107,0.07); }
+.algo-card.terminal-red { border-color: rgba(230,57,70,0.4); background: rgba(230,57,70,0.06); }
+.algo-card.terminal-blue { border-color: rgba(0,168,150,0.4); background: rgba(0,168,150,0.07); }
+.algo-card.terminal-amber { border-color: rgba(244,162,97,0.4); background: rgba(244,162,97,0.07); }
+
+.algo-phase-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+.phase-pre { background: rgba(160,110,255,0.15); color: #c4a0ff; }
+.phase-ing { background: rgba(0,168,150,0.15); color: var(--teal-light); }
+.phase-tra { background: rgba(244,162,97,0.15); color: var(--amber); }
+.phase-egr { background: rgba(45,158,107,0.15); color: #4ecb8d; }
+
+.algo-question {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+
+.algo-desc {
+  font-size: 13.5px;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+  line-height: 1.65;
+}
+
+.algo-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.algo-btns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.algo-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  border: 2px solid;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.algo-btn-yes {
+  background: rgba(45,158,107,0.1);
+  border-color: rgba(45,158,107,0.4);
+  color: #4ecb8d;
+}
+.algo-btn-yes:hover {
+  background: rgba(45,158,107,0.2);
+  border-color: var(--green);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(45,158,107,0.2);
+}
+
+.algo-btn-no {
+  background: rgba(230,57,70,0.08);
+  border-color: rgba(230,57,70,0.35);
+  color: #f27480;
+}
+.algo-btn-no:hover {
+  background: rgba(230,57,70,0.15);
+  border-color: var(--red);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(230,57,70,0.15);
+}
+
+.algo-btn-action {
+  background: rgba(0,168,150,0.1);
+  border-color: rgba(0,168,150,0.35);
+  color: var(--teal-light);
+}
+.algo-btn-action:hover {
+  background: rgba(0,168,150,0.2);
+  border-color: var(--teal);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,168,150,0.2);
+}
+
+.algo-btn-warn {
+  background: rgba(244,162,97,0.1);
+  border-color: rgba(244,162,97,0.35);
+  color: var(--amber);
+}
+.algo-btn-warn:hover {
+  background: rgba(244,162,97,0.2);
+  border-color: var(--amber);
+  transform: translateY(-2px);
+}
+
+.algo-result {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+.algo-result h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.algo-result ul { padding-left: 18px; margin-top: 6px; }
+.algo-result ul li { margin-bottom: 4px; color: var(--text-dim); }
+
+.algo-restart-btn {
+  margin-top: 20px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.algo-restart-btn:hover {
+  border-color: var(--teal);
+  color: var(--teal-light);
+  background: rgba(0,168,150,0.06);
+}
+
+.algo-back-btn {
+  margin-top: 20px;
+  margin-right: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.algo-back-btn:hover {
+  border-color: rgba(160,110,255,0.45);
+  color: #c4a0ff;
+  background: rgba(160,110,255,0.08);
+}
+.algo-back-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.algo-nav-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.path-crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.path-crumb .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+  flex-shrink: 0;
+}
+
+.path-crumb.yes .dot { background: var(--green); }
+.path-crumb.no .dot { background: var(--red); }
+
+/* CRITERIA EXPAND BUTTONS */
+.criteria-expand-btn {
+  background: rgba(0,168,150,0.1);
+  border: 1px solid rgba(0,168,150,0.3);
+  color: var(--teal-light);
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+.criteria-expand-btn:hover {
+  background: rgba(0,168,150,0.2);
+  border-color: var(--teal);
+  transform: translateY(-1px);
+}
+.criteria-expand-btn.cie {
+  background: rgba(160,110,255,0.1);
+  border-color: rgba(160,110,255,0.3);
+  color: #c4a0ff;
+}
+.criteria-expand-btn.cie:hover {
+  background: rgba(160,110,255,0.2);
+  border-color: #c4a0ff;
+}
+.criteria-panel {
+  animation: fadeIn 0.25s ease;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+/* INLINE LINK BUTTON */
+.inline-link-btn {
+  background: none;
+  border: none;
+  color: var(--teal-light);
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: inherit;
+  padding: 0;
+  font-weight: 600;
+}
+.inline-link-btn:hover { color: var(--teal); }
+
+/* ANNEXE LINK BUTTON */
+.annexe-link-btn {
+  background: rgba(0,168,150,0.07);
+  border: 1px dashed rgba(0,168,150,0.35);
+  color: var(--teal-light);
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-block;
+}
+.annexe-link-btn:hover {
+  background: rgba(0,168,150,0.15);
+  border-style: solid;
+  transform: translateY(-1px);
+}
+
+/* ANEXOS PAGE STYLES */
+.anexo-block { margin-bottom: 8px; }
+.anexo-header {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+.anexo-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  border: 1px solid;
+}
+.anexo-tag {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--teal);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.anexo-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 3px;
+  color: var(--text);
+}
+.anexo-sub {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.anexo-section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--teal);
+  font-weight: 700;
+  margin: 18px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* COWS GRID */
+.cows-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+.cows-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: border-color 0.2s;
+}
+.cows-item:hover { border-color: rgba(244,162,97,0.3); }
+.cows-item-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.cows-note {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--muted);
+  font-style: italic;
+}
+.cows-scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.cs {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.cs0 { background: rgba(45,158,107,0.15); color: #4ecb8d; }
+.cs1 { background: rgba(0,168,150,0.12); color: var(--teal-light); }
+.cs2 { background: rgba(244,162,97,0.12); color: var(--amber); }
+.cs3 { background: rgba(244,162,97,0.2); color: var(--amber); }
+.cs4 { background: rgba(230,57,70,0.12); color: #f27480; }
+.cs5 { background: rgba(230,57,70,0.2); color: #f27480; }
+</style>
+
+<script>
+// ── ALGORITHM DATA ──────────────────────────────────────────────
+const NODES = {
+
+  start: {
+    id: 'start',
+    phase: 'pre',
+    phaseLabel: 'PREINGRESO',
+    type: 'decision',
+    icon: '🚨',
+    question: '¿El paciente presenta urgencia vital?',
+    desc: 'Evalúe si hay síndrome de abstinencia agudo grave, sobredosis, riesgo para la vida u otra urgencia médica que requiera atención inmediata.',
+    tools: ['Evaluación clínica rápida', 'Signos vitales', 'Estado de consciencia'],
+    yes: 'urgencia',
+    no: 'capacidad_ips',
+  },
+
+  urgencia: {
+    id: 'urgencia',
+    phase: 'pre',
+    phaseLabel: 'PREINGRESO',
+    type: 'terminal-red',
+    icon: '🔴',
+    question: 'Estabilización / Hospitalización urgente',
+    desc: 'Activar protocolo de urgencias. El paciente puede ingresar directamente por urgencias de salud mental en cualquier hospital habilitado.',
+    tools: ['Naloxona disponible', 'Manejo síndrome de abstinencia', 'COWS'],
+    content: [
+      { title: 'Acciones inmediatas', items: [
+        'Manejo de la urgencia acorde al protocolo de cada institución',
+        'Administrar naloxona si hay sospecha de sobredosis por opioides',
+        'Monitoreo continuo de signos vitales y estado neurológico',
+        'Registro en historia clínica desde el primer contacto',
+        'Notificar al responsable del caso (gestor o referente)',
+      ]},
+    ],
+    next: 'capacidad_ips',
+    nextLabel: 'Continuar → Evaluar capacidad IPS tras estabilización',
+  },
+
+  capacidad_ips: {
+    id: 'capacidad_ips',
+    phase: 'pre',
+    phaseLabel: 'PREINGRESO',
+    type: 'decision',
+    icon: '🏥',
+    question: '¿La IPS tiene capacidad resolutiva para el manejo de TCO?',
+    desc: 'Verifique si la institución cuenta con habilitación, equipo especializado (psiquiatría / toxicología), disponibilidad de metadona u otros TAO y cupos activos.',
+    tools: ['Verificación de habilitación', 'Directorio PMM', 'Cupos disponibles'],
+    yes: 'deseo_tto',
+    no: 'remision',
+  },
+
+  remision: {
+    id: 'remision',
+    phase: 'pre',
+    phaseLabel: 'PREINGRESO',
+    type: 'terminal-amber',
+    icon: '📤',
+    question: 'Remisión a IPS con capacidad',
+    desc: 'La remisión debe ser garantizada, asistida y trazable. No se puede dejar al paciente sin referenciación activa.',
+    tools: ['Contacto EPS/EAPB', 'Directorio IPS habilitadas'],
+    content: [
+      { title: 'Puntos críticos de control', items: [
+        'Confirmación de recepción: cita, cama o contacto asegurado',
+        'Canal de comunicación formal entre IPS remisora y receptora',
+        'Responsable del caso identificado (gestor o referente)',
+        'Registro trazable en historia clínica',
+        'EPS debe autorizar en máx. 5 días hábiles (obligación legal)',
+      ]},
+      { title: 'Riesgo si no se controla', items: [
+        'Abandono temprano del tratamiento',
+        'Pérdida del paciente del sistema de salud',
+        'Riesgo de sobredosis o complicaciones graves',
+      ]},
+    ],
+    next: null,
+  },
+
+  deseo_tto: {
+    id: 'deseo_tto',
+    phase: 'ing',
+    phaseLabel: 'INGRESO',
+    type: 'decision',
+    icon: '🤝',
+    question: '¿El paciente expresa deseo de tratamiento?',
+    desc: 'El vínculo terapéutico parte de la voluntad del paciente. Si no existe deseo, se aplica enfoque de reducción de riesgos sin abandonar el acompañamiento.',
+    tools: ['Entrevista motivacional', 'Escucha activa', 'Evaluación de ambivalencia'],
+    yes: 'eval_inicial',
+    no: 'intervencion_breve_rrd',
+  },
+
+  intervencion_breve_rrd: {
+    id: 'intervencion_breve_rrd',
+    phase: 'ing',
+    phaseLabel: 'INGRESO',
+    type: 'terminal-blue',
+    icon: '🛡',
+    question: 'Intervención Breve + Reducción de Riesgos y Daños (RRD)',
+    desc: 'La abstención no es requisito para recibir atención. El sistema debe mantener el vínculo con el paciente y proteger su vida.',
+    tools: ['ASSIST', 'Consejería breve', 'Psicoeducación'],
+    content: [
+      { title: 'Acciones RRD', items: [
+        'Educación a paciente y familia sobre riesgos del consumo de opioides',
+        'Educación sobre prácticas de menor riesgo (inyectables)',
+        'Consejería motivacional breve — dejar puerta abierta',
+        'Conectar con dispositivos comunitarios: CAMAD, programas territoriales',
+        'Seguimiento periódico para revalorar deseo de tratamiento',
+      ]},
+    ],
+    next: null,
+  },
+
+  eval_inicial: {
+    id: 'eval_inicial',
+    phase: 'ing',
+    phaseLabel: 'INGRESO — VALORACIÓN INTEGRAL',
+    type: 'decision',
+    icon: '🔍',
+    question: 'Valoración Integral multidimensional (clínica, psicológica y social) → ¿Cumple criterios de TCO según DSM-5 / CIE-10?',
+    desc: 'Aplicar <a href="#" onclick="goToAnexo(\'assist\'); return false;" style="color:var(--teal-light); text-decoration:underline;">ASSIST</a> como tamizaje. Si el puntaje es compatible, confirmar con criterios DSM-5 (≥2/11 criterios en 12 meses) o CIE-10 F11.2 (≥3/6 criterios en el último año). Evaluar síndrome de abstinencia con escala <a href="#" onclick="goToAnexo(\'cows\'); return false;" style="color:var(--teal-light); text-decoration:underline;">COWS</a>. Registrar en H.C. con código CIE-10: F11.2.',
+    tools: ['ASSIST (tamizaje)', 'Criterios DSM-5', 'CIE-10: F11.2', 'COWS + comorbilidades'],
+    yes: 'registro_hc',
+    no: 'manejo_riesgo',
+  },
+
+  manejo_riesgo: {
+    id: 'manejo_riesgo',
+    phase: 'ing',
+    phaseLabel: 'INGRESO',
+    type: 'terminal-blue',
+    icon: '⚡',
+    question: 'Manejo de Riesgo / Intervención Breve',
+    desc: 'El paciente no cumple criterios plenos de TCO pero presenta consumo problemático o de riesgo. Requiere intervención preventiva estructurada.',
+    tools: ['ASSIST', 'Entrevista motivacional', 'ISA-6'],
+    content: [
+      { title: 'Intervenciones recomendadas', items: [
+        'Consejería breve estructurada (5–30 minutos) basada en evidencia',
+        'Fijación colaborativa de metas de reducción de consumo',
+        'Psicoeducación sobre riesgos del consumo de opioides',
+        'Seguimiento periódico para monitorear evolución',
+        'Prescripción de naloxona preventiva si hay riesgo identificado',
+      ]},
+    ],
+    next: null,
+  },
+
+  registro_hc: {
+    id: 'registro_hc',
+    phase: 'ing',
+    phaseLabel: 'INGRESO',
+    type: 'action',
+    icon: '📋',
+    question: 'Registro en Historia Clínica → Evaluar Severidad',
+    desc: 'Registre el diagnóstico con código F11.2 en la historia clínica. Aplique herramientas de severidad para definir el nivel de cuidado requerido.',
+    tools: ['ISA-6 (Índice de Severidad de la Adicción)', 'ASAM (criterios de ubicación)', 'Valoración interdisciplinaria'],
+    yes: 'severidad',
+    yesLabel: 'Proceder a evaluación de severidad →',
+  },
+
+  severidad: {
+    id: 'severidad',
+    phase: 'ing',
+    phaseLabel: 'INGRESO → TRATAMIENTO',
+    type: 'decision',
+    icon: '📊',
+    question: '¿Cuál es la severidad según ASSIST / ISA-6 / ASAM?',
+    desc: 'Los resultados combinados de las escalas determinan la modalidad de tratamiento. Considere: abstinencia (COWS), comorbilidades médicas/psiquiátricas, red de apoyo y estabilidad del entorno.',
+    tools: ['ASSIST', 'ISA-6', 'COWS', 'Criterios ASAM', 'Evaluación patología dual'],
+    yes: 'tto_especializado',
+    yesLabel: '⬆ Medio / Alto',
+    no: 'intervencion_breve_leve',
+    noLabel: '⬇ Bajo',
+  },
+
+  intervencion_breve_leve: {
+    id: 'intervencion_breve_leve',
+    phase: 'tra',
+    phaseLabel: 'TRATAMIENTO',
+    type: 'terminal-blue',
+    icon: '🌿',
+    question: 'Tratamiento Ambulatorio con Intervención Breve',
+    desc: 'Pacientes con severidad baja: estables, bajo riesgo de recaída inmediata, buena red de apoyo.',
+    tools: ['Entrevista motivacional', 'TCC breve', 'Monitoreo toxicológico'],
+    content: [
+      { title: 'Plan ambulatorio', items: [
+        'Controles médicos, psicológicos y toxicológicos periódicos',
+        'Terapia Cognitivo-Conductual (TCC) para prevención de recaídas',
+        'Farmacoterapia según criterio clínico (puede no requerir TAO)',
+        'Telemedicina disponible para zonas rurales o con barreras de acceso',
+        'Seguimiento de adherencia y funcionalidad social',
+      ]},
+    ],
+    next: 'eval_egreso',
+    nextLabel: 'Continuar → Evaluación previa a continuidad del cuidado',
+  },
+
+  tto_especializado: {
+    id: 'tto_especializado',
+    phase: 'tra',
+    phaseLabel: 'TRATAMIENTO',
+    type: 'decision',
+    icon: '⚗',
+    question: '¿Qué modalidad de tratamiento especializado se requiere?',
+    desc: 'Según los criterios ASAM y la situación clínica, seleccione la modalidad de mayor pertinencia. Pueden combinarse en una transición escalonada.',
+    tools: ['Criterios ASAM', 'Evaluación de riesgo vital', 'Disponibilidad de metadona', 'Red de apoyo del paciente'],
+    options: [
+      { label: '🏨 Internación', key: 'internacion', style: 'algo-btn-warn' },
+      { label: '🌅 Hospital Día', key: 'hospital_dia', style: 'algo-btn-action' },
+      { label: '🏃 Ambulatorio Intensivo', key: 'ambulatorio_intensivo', style: 'algo-btn-yes' },
+    ],
+  },
+
+  internacion: {
+    id: 'internacion',
+    phase: 'tra',
+    phaseLabel: 'TRATAMIENTO — INTERNACIÓN',
+    type: 'terminal-amber',
+    icon: '🏨',
+    question: 'Tratamiento Intramural (Internación)',
+    desc: 'Indicado para alta severidad, riesgo inminente de sobredosis, patología dual grave, o inducción farmacológica bajo supervisión estricta.',
+    tools: ['MOUD: Metadona / Buprenorfina', 'Desintoxicación supervisada', 'COWS diario', 'Equipo interdisciplinario'],
+    content: [
+      { title: 'Fases del proceso intramural', items: [
+        '1. Desintoxicación: manejo hospitalario de síntomas agudos y abstinencia',
+        '2. Inducción TAO: inicio de metadona o buprenorfina con titulación controlada',
+        '3. Estabilización: monitoreo clínico continuo, psicoterapia individual y grupal',
+        '4. Transición: evaluación para paso a Hospital Día o ambulatorio',
+      ]},
+      { title: 'Componentes transversales', items: [
+        'TCC + Entrevista Motivacional durante toda la fase',
+        'Terapia familiar activa',
+        'Naloxona para llevar a casa + educación al egreso',
+        'Plan de egreso desde el inicio de la internación',
+      ]},
+    ],
+    next: 'eval_egreso',
+    nextLabel: 'Continuar → Evaluación previa a continuidad del cuidado',
+  },
+
+  hospital_dia: {
+    id: 'hospital_dia',
+    phase: 'tra',
+    phaseLabel: 'TRATAMIENTO — HOSPITAL DÍA',
+    type: 'terminal-blue',
+    icon: '🌅',
+    question: 'Hospital Día',
+    desc: 'El paciente permanece en la institución durante el día, regresa a casa por la noche. Mantiene vínculos familiares y sociales.',
+    tools: ['MOUD supervisado', 'TCC grupal', 'Terapia ocupacional', 'ISA-6 de seguimiento'],
+    content: [
+      { title: 'Estructura del Hospital Día', items: [
+        'Dispensación supervisada de TAO (metadona / buprenorfina)',
+        'Sesiones individuales y grupales de TCC',
+        'Terapia ocupacional y actividades de reinserción',
+        'Evaluación periódica de severidad con ISA-6',
+        'Articulación con red de apoyo familiar y comunitaria',
+      ]},
+    ],
+    next: 'eval_egreso',
+    nextLabel: 'Continuar → Evaluación previa a continuidad del cuidado',
+  },
+
+  ambulatorio_intensivo: {
+    id: 'ambulatorio_intensivo',
+    phase: 'tra',
+    phaseLabel: 'TRATAMIENTO — AMBULATORIO',
+    type: 'terminal-green',
+    icon: '🏃',
+    question: 'Tratamiento Ambulatorio Intensivo',
+    desc: 'Para pacientes clínicamente estables con bajo riesgo inmediato. Incluye modalidades presenciales y remotas.',
+    tools: ['Metadona oral / Buprenorfina', 'Telemedicina', 'TCC', 'Monitoreo toxicológico'],
+    content: [
+      { title: 'Modalidades ambulatorias', items: [
+        'Controles médicos y psicológicos periódicos presenciales',
+        'Telemedicina para control clínico y psicoterapia (especialmente en zonas rurales)',
+        'Esquemas flexibles: metadona en solución diaria + tabletas para llevar fines de semana (si hay estabilidad)',
+        'Entrevista motivacional continuada',
+        'Monitoreo toxicológico periódico',
+      ]},
+    ],
+    next: 'eval_egreso',
+    nextLabel: 'Continuar → Evaluación previa a continuidad del cuidado',
+  },
+
+  eval_egreso: {
+    id: 'eval_egreso',
+    phase: 'egr',
+    phaseLabel: 'EGRESO',
+    type: 'decision',
+    icon: '📐',
+    question: 'Evaluación previa a continuidad del cuidado: ¿Mantiene severidad media/alta?',
+    desc: 'Antes del egreso, reaplicar ASSIST/ISA para determinar si el paciente requiere continuar en tratamiento especializado o puede pasar a continuidad del cuidado con menor intensidad.',
+    tools: ['ASSIST', 'ISA-6', 'Evaluación de funcionalidad', 'Adherencia'],
+    yes: 'continuidad_intensiva',
+    yesLabel: 'Sí → Continuar tratamiento especializado',
+    no: 'plan_egreso',
+    noLabel: 'No → Plan de egreso planificado',
+  },
+
+  continuidad_intensiva: {
+    id: 'continuidad_intensiva',
+    phase: 'egr',
+    phaseLabel: 'EGRESO / CONTINUIDAD',
+    type: 'terminal-amber',
+    icon: '🔁',
+    question: 'Continuidad del Cuidado en Tratamiento Especializado',
+    desc: 'El paciente requiere mantener o ajustar la intensidad del tratamiento. Reevaluar modalidad (internación → hospital día → ambulatorio).',
+    tools: ['ASAM para reclasificación', 'ISA-6', 'COWS'],
+    content: [
+      { title: 'Acciones de continuidad', items: [
+        'Reevaluar nivel de cuidado y ajustar modalidad según evolución',
+        'Mantener farmacoterapia TAO con revisión de dosis',
+        'Continuar psicoterapia adaptada a la fase actual',
+        'Fortalecer red de apoyo y factores protectores',
+        'Documentar plan de egreso actualizado con metas revisadas',
+      ]},
+    ],
+    next: 'plan_egreso',
+    nextLabel: 'Continuar → Plan de Egreso',
+  },
+
+  plan_egreso: {
+    id: 'plan_egreso',
+    phase: 'egr',
+    phaseLabel: 'EGRESO — PLAN DE CONTINUIDAD',
+    type: 'terminal-green',
+    icon: '✅',
+    question: 'Plan de Egreso y Continuidad del Cuidado',
+    desc: 'El egreso no implica finalizar el tratamiento, sino transitar hacia modalidades ambulatorias escalonadas. Se estructura en torno a 4 dominios de evaluación y un plan individualizado.',
+    tools: ['ASAM', 'ISA-6', 'Remisión trazable', 'Canal IPS↔IPS'],
+    content: [
+      { title: '🔷 Dominio 1 — Estado Clínico: Estabilidad / Comorbilidades', items: [
+        'Verificar estabilidad clínica sostenida y control de síntomas de abstinencia',
+        'Confirmar dosis TAO estabilizada, sin eventos adversos relevantes',
+        'Evaluar parámetros clínicos generales y comorbilidades médicas (VIH, Hepatitis, ETS, enf. hepáticas/renales)',
+        'Identificar trastornos psiquiátricos: depresión, patología dual, ansiedad, trastornos de personalidad',
+      ]},
+      { title: '🔷 Dominio 2 — Evolución del Consumo: Adherencia / Craving', items: [
+        'Evaluar adherencia a consultas médicas, psicológicas e intervenciones psicosociales',
+        'Verificar cumplimiento del tratamiento farmacológico en los periodos definidos',
+        'Evaluar intensidad del craving y presencia de consumo reciente de opioides u otras SPA',
+        'Craving persistente o consumo reciente indica mayor vulnerabilidad a recaída',
+      ]},
+      { title: '🔷 Dominio 3 — Riesgo: Desencadenantes / Recaída y Sobredosis', items: [
+        'Estimar riesgo de recaída: historia previa, duración de abstinencia, desencadenantes ambientales/emocionales',
+        'Evaluar habilidades de afrontamiento ante situaciones de riesgo',
+        'Identificar factores de riesgo de sobredosis: pérdida de tolerancia tras abstinencia',
+        'Vigilar consumo concomitante de depresores del SNC (benzodiacepinas, alcohol)',
+        'Verificar antecedentes de sobredosis previas',
+      ]},
+      { title: '🔷 Dominio 4 — Entorno: Soporte Familiar / Determinantes Sociales', items: [
+        'Evaluar determinantes sociales: vivienda, empleo, educación, acceso a servicios',
+        'Valorar existencia y calidad de la red de apoyo familiar y comunitaria',
+        'Uso de genograma para evaluar dinámica familiar',
+        'Red de apoyo adecuada favorece continuidad; su ausencia incrementa riesgo de abandono y sobredosis',
+      ]},
+      { title: '📋 Plan Individualizado de Egreso — Componentes', items: [
+        '1. Diagnóstico principal, diagnósticos asociados y resumen clínico del episodio',
+        '2. Modalidad de atención posterior (ambulatorio, Hospital Día, telemedicina, TAO)',
+        '3. Cronograma de controles: semanal (mes 1) → quincenal (meses 2–3) → mensual (meses posteriores)',
+        '4. Continuidad farmacológica: metadona, clonidina u otro TAO según evolución',
+        '5. Plan de prevención de recaídas: desencadenantes, TCC, manejo del craving',
+        '6. Educación sobre sobredosis: signos, factores de riesgo, importancia de atención inmediata',
+        '7. Estrategias de reducción de riesgos y daños: educación, acceso a programas comunitarios',
+        '8. Ruta de reingreso: puntos de contacto, referencia rápida, acceso prioritario a TAO',
+      ]},
+      { title: '🌐 Red de Continuidad — según pertinencia clínica y social', items: [
+        '🏥 Servicios de Salud: Urgencias / APS / Consulta Externa',
+        '🏘 Dispositivos Comunitarios: CAMAD / Programas Territoriales',
+        '🏛 Remisiones Institucionales: EPS / IPS (otros niveles) / Programas de Salud Mental',
+        '⚖ Sistema Intersectorial: Sistema Judicial / Protección Social / Instituciones Educativas o Laborales',
+        '🚶 Acceso Directo: Demanda Espontánea / Reingreso en cualquier momento',
+      ]},
+    ],
+    next: null,
+  },
+};
+
+// ── ALGO ENGINE ──────────────────────────────────────────────────
+let currentNode = 'start';
+let pathHistory = [];
+let nodeHistory = []; // pila para navegación hacia atrás
+
+function phaseClass(p) {
+  return { pre: 'phase-pre', ing: 'phase-ing', tra: 'phase-tra', egr: 'phase-egr' }[p] || 'phase-ing';
+}
+
+function toolTag(t, i) {
+  const colors = ['', 'warn', ''];
+  return `<span class="tool-tag ${i % 3 === 1 ? 'warn' : ''}">${t}</span>`;
+}
+
+function renderPath() {
+  const el = document.getElementById('algo-path');
+  if (!pathHistory.length) { el.innerHTML = ''; return; }
+  el.innerHTML = pathHistory.map(h =>
+    `<span class="path-crumb ${h.ans}"><span class="dot"></span>${h.label}</span>`
+  ).join('<span style="color:var(--muted);font-size:12px;margin:0 2px">›</span>');
+}
+
+function renderNode(nodeId) {
+  currentNode = nodeId;
+  const n = NODES[nodeId];
+  const container = document.getElementById('algo-node');
+
+  let toolsHtml = n.tools ? `<div class="algo-tools">${n.tools.map((t,i) => toolTag(t,i)).join('')}</div>` : '';
+
+  let actionsHtml = '';
+
+  if (n.type === 'decision') {
+    if (n.options) {
+      // multi-option
+      actionsHtml = `<div class="algo-btns">${n.options.map(o =>
+        `<button class="algo-btn ${o.style}" onclick="goNode('${o.key}', '${o.label}', 'yes')">${o.label}</button>`
+      ).join('')}</div>`;
+    } else {
+      const yL = n.yesLabel || '✔ Sí';
+      const nL = n.noLabel || '✖ No';
+      actionsHtml = `<div class="algo-btns">
+        <button class="algo-btn algo-btn-yes" onclick="goNode('${n.yes}', '${yL}', 'yes')">✔ ${yL}</button>
+        <button class="algo-btn algo-btn-no" onclick="goNode('${n.no}', '${nL}', 'no')">✖ ${nL}</button>
+      </div>`;
+    }
+  } else if (n.type === 'action') {
+    const yL = n.yesLabel || 'Continuar →';
+    actionsHtml = `<div class="algo-btns">
+      <button class="algo-btn algo-btn-action" onclick="goNode('${n.yes}', '${yL}', 'yes')">→ ${yL}</button>
+    </div>`;
+  }
+
+  let contentHtml = '';
+  if (n.content) {
+    contentHtml = n.content.map(c => `
+      <div class="algo-result" style="background:rgba(255,255,255,0.04); border:1px solid var(--border);">
+        <h4 style="color:var(--text)">📌 ${c.title}</h4>
+        <ul>${c.items.map(i => `<li>${i}</li>`).join('')}</ul>
+      </div>
+    `).join('');
+  }
+
+  let nextHtml = '';
+  if (n.next) {
+    nextHtml = `<button class="algo-btn algo-btn-action" style="margin-top:16px" onclick="goNode('${n.next}', '${n.nextLabel}', 'yes')">→ ${n.nextLabel}</button>`;
+  }
+
+  const backDisabled = nodeHistory.length === 0 ? 'disabled' : '';
+  const navRow = `<div class="algo-nav-row">
+    <button class="algo-back-btn" onclick="goBack()" ${backDisabled}>← Paso anterior</button>
+    <button class="algo-restart-btn" onclick="restartAlgo()">↺ Reiniciar</button>
+  </div>`;
+
+  container.innerHTML = `
+    <div class="algo-card ${n.type}">
+      <div class="algo-phase-tag ${phaseClass(n.phase)}">${n.icon} ${n.phaseLabel}</div>
+      <div class="algo-question">${n.question}</div>
+      <div class="algo-desc">${n.desc}</div>
+      ${toolsHtml}
+      ${actionsHtml}
+      ${contentHtml}
+      ${nextHtml}
+      ${navRow}
+    </div>
+  `;
+
+  document.getElementById('algo-info').innerHTML = '';
+}
+
+function goNode(nodeId, label, ans) {
+  const n = NODES[currentNode];
+  // Guardar estado actual antes de navegar
+  nodeHistory.push({ nodeId: currentNode, pathLen: pathHistory.length });
+  pathHistory.push({ label: n.question.length > 40 ? n.question.slice(0, 38) + '…' : n.question, ans });
+  renderPath();
+  renderNode(nodeId);
+  document.getElementById('algo-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function restartAlgo() {
+  pathHistory = [];
+  nodeHistory = [];
+  renderPath();
+  renderNode('start');
+}
+
+function goBack() {
+  if (nodeHistory.length === 0) return;
+  const prev = nodeHistory.pop();
+  pathHistory = pathHistory.slice(0, prev.pathLen);
+  renderPath();
+  renderNode(prev.nodeId);
+  document.getElementById('algo-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Init when tab is shown
+document.addEventListener('DOMContentLoaded', () => {
+  renderNode('start');
+});
+</script>
+
+</main>
+
+<script>
+  function showStage(index, btn) {
+    document.querySelectorAll('.stage-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.stage-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('stage-' + index).classList.add('active');
+    btn.classList.add('active');
+    if (index === 5) renderNode('start');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goToAnexo(section) {
+    // Find and click the Anexos tab button
+    const btns = document.querySelectorAll('.stage-btn');
+    btns.forEach(b => {
+      if (b.textContent.includes('Anexos')) {
+        b.click();
+      }
+    });
+    // Scroll to specific section after short delay
+    setTimeout(() => {
+      const el = document.getElementById('anexo-' + section);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+  }
+
+  function toggleCriteria(panelId) {
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+    const isVisible = panel.style.display !== 'none';
+    panel.style.display = isVisible ? 'none' : 'block';
+  }
+
+  function toggleAccordion(header) {
+    const body = header.nextElementSibling;
+    const isOpen = header.classList.contains('open');
+    header.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
+  // ── Radio option visual highlight ─────────────────────────────
+  document.addEventListener('change', function(e) {
+    if (e.target.type === 'radio') {
+      const name = e.target.name;
+      // itc-opt style (APGAR / ASSIST)
+      document.querySelectorAll(`[name="${name}"]`).forEach(r => {
+        const lbl = r.closest('.itc-opt');
+        if (lbl) lbl.classList.remove('selected');
+      });
+      const selLbl = e.target.closest('.itc-opt');
+      if (selLbl) selLbl.classList.add('selected');
+      // cows-radio-opt style
+      document.querySelectorAll(`[name="${name}"]`).forEach(r => {
+        const lbl = r.closest('.cows-radio-opt');
+        if (lbl) lbl.classList.remove('selected');
+      });
+      const cowsLbl = e.target.closest('.cows-radio-opt');
+      if (cowsLbl) cowsLbl.classList.add('selected');
+    }
+  });
+
+  // ── APGAR Familiar ─────────────────────────────────────────────
+  function calcApgar() {
+    let total = 0, answered = 0;
+    for (let i = 1; i <= 5; i++) {
+      const sel = document.querySelector(`input[name="apgar_${i}"]:checked`);
+      if (sel) { total += parseInt(sel.value); answered++; }
+    }
+    if (answered < 5) {
+      alert('Por favor responda todas las preguntas antes de calcular.');
+      return;
+    }
+    let cls, label, desc, rec;
+    if (total >= 7) {
+      cls = 'res-green';
+      label = 'Función Familiar Normal';
+      desc = `Puntaje: ${total}/20. El paciente percibe un funcionamiento familiar satisfactorio en las dimensiones de adaptación, resolución de problemas, afecto, cooperación y tiempo compartido.`;
+      rec = 'Fortalecer la red de apoyo familiar como recurso protector durante el tratamiento.';
+    } else if (total >= 4) {
+      cls = 'res-amber';
+      label = 'Disfunción Familiar Moderada';
+      desc = `Puntaje: ${total}/20. Se identifican áreas de disfunción familiar que pueden interferir con la adherencia y el proceso terapéutico.`;
+      rec = 'Considerar intervención psicosocial familiar. Trabajo social y/o psicología deben evaluar la dinámica familiar e incluirla en el plan de manejo.';
+    } else {
+      cls = 'res-red';
+      label = 'Disfunción Familiar Severa';
+      desc = `Puntaje: ${total}/20. El paciente percibe un funcionamiento familiar gravemente deteriorado, lo cual es un factor de riesgo significativo para el TCO y la recaída.`;
+      rec = 'Intervención familiar prioritaria. Evaluar red de apoyo alternativa. Considerar dispositivos comunitarios y protección social.';
+    }
+    const el = document.getElementById('apgar-result');
+    el.className = `itc-result ${cls}`;
+    el.innerHTML = `<div class="res-score">${total}<span style="font-size:1.1rem; opacity:.6">/20</span></div><div class="res-label">${label}</div><div class="res-desc">${desc}</div><div style="margin-top:8px; padding:8px 10px; background:rgba(255,255,255,0.05); border-radius:6px; font-size:12.5px;"><strong>Recomendación clínica:</strong> ${rec}</div>`;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ── COWS ────────────────────────────────────────────────────────
+  function calcCows() {
+    const items = [1,2,3,4,5,6,7,8,9,10,11];
+    let total = 0, answered = 0;
+    items.forEach(i => {
+      const sel = document.querySelector(`input[name="cows_${i}"]:checked`);
+      if (sel) { total += parseInt(sel.value); answered++; }
+    });
+    if (answered < 11) {
+      alert(`Faltan ${11 - answered} ítems por responder.`);
+      return;
+    }
+    let cls, label, desc, action;
+    if (total <= 4) {
+      cls = 'res-blue'; label = 'Sin abstinencia significativa';
+      desc = `Puntaje total: ${total}. No se evidencia síndrome de abstinencia clínicamente relevante.`;
+      action = 'Monitoreo clínico. Reevaluar según evolución.';
+    } else if (total <= 12) {
+      cls = 'res-green'; label = 'Abstinencia Leve';
+      desc = `Puntaje total: ${total} (rango leve: 5–12). Síntomas manejables de forma ambulatoria con supervisión.`;
+      action = 'Manejo ambulatorio posible. Control frecuente. Considerar inicio de TAO según criterio médico.';
+    } else if (total <= 24) {
+      cls = 'res-amber'; label = 'Abstinencia Moderada';
+      desc = `Puntaje total: ${total} (rango moderado: 13–24). Abstinencia que requiere manejo farmacológico activo.`;
+      action = 'Iniciar TAO (metadona). Evaluar Hospital Día o internación según contexto clínico.';
+    } else if (total <= 36) {
+      cls = 'res-red'; label = 'Abstinencia Moderadamente Severa';
+      desc = `Puntaje total: ${total} (rango moderado-severo: 25–36). Alta morbilidad. Requiere supervisión médica continua.`;
+      action = 'Hospitalización recomendada. Inducción TAO supervisada. Evaluación de comorbilidades.';
+    } else {
+      cls = 'res-red'; label = '⚠ Abstinencia Severa';
+      desc = `Puntaje total: ${total} (rango severo: >36). Emergencia clínica. Riesgo vital si no se interviene.`;
+      action = 'Hospitalización urgente. Manejo médico intensivo inmediato. Activar protocolo de urgencias.';
+    }
+    const el = document.getElementById('cows-result');
+    el.className = `itc-result ${cls}`;
+    el.innerHTML = `<div class="res-score">${total}<span style="font-size:1.1rem; opacity:.6"> pts</span></div><div class="res-label">${label}</div><div class="res-desc">${desc}</div><div style="margin-top:8px; padding:8px 10px; background:rgba(255,255,255,0.05); border-radius:6px; font-size:12.5px;"><strong>Acción clínica:</strong> ${action}</div>`;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ── ASSIST ──────────────────────────────────────────────────────
+  function calcAssist() {
+    const fields = ['assist_p2','assist_p3','assist_p4','assist_p5','assist_p6','assist_p7'];
+    let total = 0, answered = 0;
+    fields.forEach(f => {
+      const sel = document.querySelector(`input[name="${f}"]:checked`);
+      if (sel) { total += parseInt(sel.value); answered++; }
+    });
+    if (answered < 6) {
+      alert(`Faltan ${6 - answered} preguntas por responder.`);
+      return;
+    }
+    let cls, label, desc, action;
+    if (total <= 3) {
+      cls = 'res-green'; label = 'Sin intervención requerida';
+      desc = `Puntaje opiáceos: ${total} (rango: 0–3). No se identifica consumo problemático de opiáceos en los últimos 3 meses.`;
+      action = 'Registrar puntuación en historia clínica. Educación preventiva. Seguimiento en próxima consulta.';
+    } else if (total <= 26) {
+      cls = 'res-amber'; label = 'Intervención Breve Recomendada';
+      desc = `Puntaje opiáceos: ${total} (rango: 4–26). Se identifica consumo problemático o de riesgo que requiere intervención estructurada.`;
+      action = 'Aplicar consejería breve basada en entrevista motivacional (5–30 min). Entregar tarjeta de retroalimentación ASSIST. Establecer seguimiento.';
+    } else {
+      cls = 'res-red'; label = 'Tratamiento Especializado Requerido';
+      desc = `Puntaje opiáceos: ${total} (rango: 27+). Consumo muy problemático. Alta probabilidad de TCO.`;
+      action = 'Derivar a evaluación diagnóstica completa (DSM-5/CIE-10). Iniciar ruta de tratamiento especializado. Aplicar criterios ASAM para nivel de cuidado.';
+    }
+    const el = document.getElementById('assist-result');
+    el.className = `itc-result ${cls}`;
+    el.innerHTML = `<div class="res-score">${total}<span style="font-size:1.1rem; opacity:.6"> pts</span></div><div class="res-label">${label}</div><div class="res-desc">${desc}</div><div style="margin-top:8px; padding:8px 10px; background:rgba(255,255,255,0.05); border-radius:6px; font-size:12.5px;"><strong>Acción clínica:</strong> ${action}</div>`;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // ── Reset tool ──────────────────────────────────────────────────
+  function resetTool(tool) {
+    const prefixes = tool === 'cows'
+      ? ['cows_1','cows_2','cows_3','cows_4','cows_5','cows_6','cows_7','cows_8','cows_9','cows_10','cows_11']
+      : tool === 'assist'
+      ? ['assist_p2','assist_p3','assist_p4','assist_p5','assist_p6','assist_p7']
+      : ['apgar_1','apgar_2','apgar_3','apgar_4','apgar_5'];
+    prefixes.forEach(name => {
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => { r.checked = false; });
+      document.querySelectorAll(`[name="${name}"]`).forEach(r => {
+        const lbl = r.closest('.itc-opt') || r.closest('.cows-radio-opt');
+        if (lbl) lbl.classList.remove('selected');
+      });
+    });
+    const el = document.getElementById(`${tool}-result`);
+    if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+  }
+</script>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  CLINICAL SCALES — SOAPP-R · ORT · COMM-S
+// ══════════════════════════════════════════════════════════════
+
+// ── SOAPP-R data ─────────────────────────────────────────────
+const SOAPP_QUESTIONS = [
+  '¿Con qué frecuencia tiene cambios de humor?',
+  '¿Con qué frecuencia ha sentido la necesidad de dosis más altas de medicamentos para tratar su dolor?',
+  '¿Con qué frecuencia te has sentido impaciente con tus médicos?',
+  '¿Con qué frecuencia has sentido que las cosas son demasiado abrumadoras que no puedes manejarlas?',
+  '¿Con qué frecuencia hay tensión en el hogar?',
+  '¿Con qué frecuencia ha contado las pastillas para el dolor para ver cuántas quedan?',
+  '¿Con qué frecuencia le ha preocupado que la gente lo juzgue por tomar analgésicos?',
+  '¿Con qué frecuencia te sientes aburrido?',
+  '¿Con qué frecuencia ha tomado más analgésicos de los que debía?',
+  '¿Con qué frecuencia te ha preocupado que te dejen solo?',
+  '¿Con qué frecuencia has sentido ansias de medicación?',
+  '¿Con qué frecuencia han expresado otras personas su preocupación por el uso de tus medicamentos?',
+  '¿Con qué frecuencia alguno de sus amigos cercanos ha tenido problemas con el alcohol o las drogas?',
+  '¿Con qué frecuencia le han dicho otros que tuvo mal genio?',
+  '¿Con qué frecuencia te has sentido consumido por la necesidad de obtener medicamentos para el dolor?',
+  '¿Con qué frecuencia te has quedado sin medicamentos para el dolor antes de tiempo?',
+  '¿Con qué frecuencia otros te han impedido obtener lo que mereces?',
+  '¿Con qué frecuencia, en su vida, ha tenido problemas legales o ha sido arrestado?',
+  '¿Con qué frecuencia ha asistido a una reunión de AA o NA?',
+  '¿Con qué frecuencia has estado en una discusión que estaba tan fuera de control que alguien resultó herido?',
+  '¿Con qué frecuencia has sido abusado sexualmente?',
+  '¿Con qué frecuencia otros han sugerido que tiene un problema de drogas o alcohol?',
+  '¿Con qué frecuencia ha tenido que tomar prestados medicamentos para el dolor de su familia o amigos?',
+  '¿Con qué frecuencia ha sido tratado por un problema de alcohol o drogas?',
+];
+
+// ── COMM-S data ───────────────────────────────────────────────
+const COMM_QUESTIONS = [
+  '¿Con qué frecuencia ha tenido dificultad para pensar con claridad o ha tenido problemas de memoria?',
+  '¿Con qué frecuencia las personas se quejan de que usted no ha completado sus tareas? (Por ejemplo, ir a clase, al trabajo o a reuniones)',
+  '¿Con qué frecuencia ha tenido que consultar a alguien diferente a su médico para obtener suficiente manejo del dolor con sus medicamentos? (Por ejemplo, otro médico o un doctor de urgencias)',
+  '¿Con qué frecuencia ha tomado sus medicamentos de una manera diferente a como fueron prescritos?',
+  '¿Con qué frecuencia ha pensado seriamente en causarse daño?',
+  '¿Qué tanto de su tiempo ha gastado pensando sobre sus medicamentos para el dolor? (Por ejemplo, en tener suficientes, tomarlos de acuerdo al horario)',
+  '¿Con qué frecuencia discute con la gente?',
+  '¿Con qué frecuencia ha tenido problemas en controlar su ira? (Por ejemplo, cuando maneja un automóvil, gritarle a los demás)',
+  '¿Con qué frecuencia necesitó tomar medicamentos para el dolor que son de alguien más y no de usted?',
+  '¿Con qué frecuencia se ha preocupado por cómo usted está manejando sus medicamentos?',
+  '¿Con qué frecuencia otras personas se han preocupado por cómo usted está manejando sus medicamentos?',
+  '¿Con qué frecuencia ha tenido que hacer una llamada de emergencia o presentarse en la clínica sin cita previa?',
+  '¿Con qué frecuencia se ha enfadado con otras personas?',
+  '¿Con qué frecuencia ha tomado más medicamentos de lo que tiene prescrito?',
+  '¿Con qué frecuencia ha pedido prestado a otra persona medicamentos para el dolor?',
+  '¿Con qué frecuencia ha tomado medicamentos para el dolor con propósitos diferentes? (Por ejemplo, para ayudarlo a dormir, mejorar su estado de ánimo, o disminuir el estrés)',
+  '¿Con qué frecuencia ha tenido que visitar al servicio de emergencias del hospital?',
+];
+
+// ── ORT data ──────────────────────────────────────────────────
+const ORT_ITEMS = [
+  { section: 'Antecedentes familiares de abuso de sustancias', items: [
+    { label: 'Alcohol', scoreF: 1, scoreM: 3, id: 'ort_fam_alc' },
+    { label: 'Drogas ilegales', scoreF: 2, scoreM: 3, id: 'ort_fam_drug' },
+    { label: 'Medicamentos', scoreF: 4, scoreM: 4, id: 'ort_fam_med' },
+  ]},
+  { section: 'Antecedentes personales de abuso de sustancias', items: [
+    { label: 'Alcohol', scoreF: 3, scoreM: 3, id: 'ort_per_alc' },
+    { label: 'Drogas ilegales', scoreF: 4, scoreM: 4, id: 'ort_per_drug' },
+    { label: 'Medicamentos', scoreF: 5, scoreM: 5, id: 'ort_per_med' },
+  ]},
+  { section: 'Edad (marcar si está entre 16 y 45 años)', items: [
+    { label: 'Edad entre 16 y 45 años', scoreF: 1, scoreM: 1, id: 'ort_age' },
+  ]},
+  { section: 'Antecedentes de abuso sexual', items: [
+    { label: 'Historia de abuso sexual', scoreF: 3, scoreM: 0, id: 'ort_sexual' },
+  ]},
+  { section: 'Enfermedad psiquiátrica', items: [
+    { label: 'TDAH, TOC, trastorno bipolar, esquizofrenia', scoreF: 2, scoreM: 2, id: 'ort_psiq1' },
+    { label: 'Depresión', scoreF: 1, scoreM: 1, id: 'ort_psiq2' },
+  ]},
+];
+
+// ── Render functions ──────────────────────────────────────────
+function buildScaleRow(q, idx, name) {
+  const labels = ['0','1','2','3','4'];
+  const btns = labels.map(v =>
+    `<button class="scale-opt" data-name="${name}" data-val="${v}" onclick="selectScale(this,'${name}',${idx})">${v}</button>`
+  ).join('');
+  return `<div class="clinical-q-row" id="row-${name}-${idx}">
+    <div class="clinical-q-text"><span class="clinical-q-num">${idx+1}.</span>${q}</div>
+    <div class="scale-opts" id="opts-${name}-${idx}">${btns}</div>
+  </div>`;
+}
+
+function selectScale(btn, name, idx) {
+  document.querySelectorAll(`#opts-${name}-${idx} .scale-opt`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateCount(name);
+}
+
+function updateCount(name) {
+  const total = name === 'soapp' ? 24 : 17;
+  let answered = 0;
+  for (let i = 0; i < total; i++) {
+    if (document.querySelector(`#opts-${name}-${i} .scale-opt.selected`)) answered++;
+  }
+  const el = document.getElementById(`${name}-count`);
+  if (el) el.textContent = `${answered} / ${total} respondidas`;
+}
+
+function getScaleValues(name, total) {
+  const vals = [];
+  for (let i = 0; i < total; i++) {
+    const sel = document.querySelector(`#opts-${name}-${i} .scale-opt.selected`);
+    vals.push(sel ? parseInt(sel.dataset.val) : null);
+  }
+  return vals;
+}
+
+function showResult(id, score, cls, label, desc, action) {
+  const el = document.getElementById(id);
+  el.className = `itc-result ${cls}`;
+  el.innerHTML = `<div class="res-score">${score}<span style="font-size:1rem;opacity:.6"> pts</span></div>
+    <div class="res-label">${label}</div>
+    <div class="res-desc">${desc}</div>
+    <div style="margin-top:8px;padding:8px 12px;background:rgba(255,255,255,0.04);border-radius:6px;font-size:12.5px;">
+      <strong>Recomendación clínica:</strong> ${action}
+    </div>`;
+  el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ── Init SOAPP-R ──────────────────────────────────────────────
+function initSOAPP() {
+  const container = document.getElementById('soapp-questions');
+  if (!container || container.dataset.built) return;
+  const header = `<div class="scale-header-row">
+    <div style="font-size:11px;color:var(--muted);">Pregunta (En los últimos 30 días...)</div>
+    <div class="scale-header-labels">
+      ${['Nunca','Rara vez','A veces','A menudo','Muy a<br>menudo'].map((l,i) =>
+        `<div class="scale-header-lbl">${l}<br><strong>${i}</strong></div>`).join('')}
+    </div>
+  </div>`;
+  container.innerHTML = header + SOAPP_QUESTIONS.map((q,i) => buildScaleRow(q, i, 'soapp')).join('');
+  container.dataset.built = '1';
+}
+
+function calcSoapp() {
+  const vals = getScaleValues('soapp', 24);
+  const unanswered = vals.filter(v => v === null).length;
+  if (unanswered > 0) { alert(`Faltan ${unanswered} preguntas por responder.`); return; }
+  const total = vals.reduce((a,b) => a+b, 0);
+  let cls, label, desc, action;
+  if (total < 9) {
+    cls='res-green'; label='Riesgo Bajo';
+    desc=`Puntuación total: ${total}. El paciente presenta un perfil de bajo riesgo para uso indebido de opioides.`;
+    action='Continuar con tratamiento estándar. Monitoreo periódico con reaplicación semestral o ante cambios clínicos.';
+  } else if (total <= 21) {
+    cls='res-amber'; label='Riesgo Moderado';
+    desc=`Puntuación total: ${total}. Se identifican factores de riesgo moderados para uso indebido de opioides.`;
+    action='Intensificar seguimiento. Aplicar estrategias de monitoreo estructurado, acuerdos terapéuticos y monitoreo toxicológico frecuente.';
+  } else {
+    cls='res-red'; label='Riesgo Elevado';
+    desc=`Puntuación total: ${total}. Alto riesgo de uso indebido de opioides. Requiere manejo especializado.`;
+    action='Considerar alternativas farmacológicas. Si se prescriben opioides, implementar monitoreo muy estrecho, contratos terapéuticos, toxicología frecuente y evaluación psiquiátrica.';
+  }
+  showResult('soapp-result', total, cls, label, desc, action);
+}
+
+// ── Init COMM-S ───────────────────────────────────────────────
+function initCOMM() {
+  const container = document.getElementById('comm-questions');
+  if (!container || container.dataset.built) return;
+  const header = `<div class="scale-header-row">
+    <div style="font-size:11px;color:var(--muted);">Pregunta (En los últimos 30 días...)</div>
+    <div class="scale-header-labels">
+      ${['Nunca','Casi<br>nunca','A veces','Casi<br>siempre','Siempre'].map((l,i) =>
+        `<div class="scale-header-lbl">${l}<br><strong>${i}</strong></div>`).join('')}
+    </div>
+  </div>`;
+  container.innerHTML = header + COMM_QUESTIONS.map((q,i) => buildScaleRow(q, i, 'comm')).join('');
+  container.dataset.built = '1';
+}
+
+function calcCOMM() {
+  const vals = getScaleValues('comm', 17);
+  const unanswered = vals.filter(v => v === null).length;
+  if (unanswered > 0) { alert(`Faltan ${unanswered} preguntas por responder.`); return; }
+  const total = vals.reduce((a,b) => a+b, 0);
+  let cls, label, desc, action;
+  if (total < 9) {
+    cls='res-green'; label='Riesgo Bajo de Mal Uso';
+    desc=`Puntuación total: ${total}. No se evidencian conductas de uso inapropiado de opioides en el período evaluado.`;
+    action='Continuar tratamiento actual. Reaplicar en próxima consulta o ante cambios en el comportamiento del paciente.';
+  } else if (total <= 21) {
+    cls='res-amber'; label='Riesgo Moderado';
+    desc=`Puntuación total: ${total}. Se identifican algunos indicadores de uso problemático que requieren atención.`;
+    action='Revisar plan terapéutico. Considerar ajuste de dosis, aumento de frecuencia de controles, monitoreo toxicológico y evaluación psicológica.';
+  } else {
+    cls='res-red'; label='Riesgo Alto — Posible Mal Uso Activo';
+    desc=`Puntuación total: ${total}. Hallazgos consistentes con uso inapropiado activo de opioides.`;
+    action='Evaluación inmediata por psiquiatría/medicina del dolor. Revisar continuidad del tratamiento opioide. Aplicar criterios ASAM para posible cambio de modalidad.';
+  }
+  showResult('comm-result', total, cls, label, desc, action);
+}
+
+// ── Render ORT ────────────────────────────────────────────────
+function renderORT() {
+  const sexEl = document.querySelector('input[name="ort_sex"]:checked');
+  if (!sexEl) return;
+  const sex = sexEl.value;
+  const container = document.getElementById('ort-questions');
+  let html = '';
+  ORT_ITEMS.forEach(section => {
+    html += `<div class="ort-section"><div class="ort-section-title">${section.section}</div>`;
+    section.items.forEach(item => {
+      const score = sex === 'F' ? item.scoreF : item.scoreM;
+      const scoreDisplay = score === 0 ? '<span style="color:var(--muted); font-size:11px;">N/A</span>' :
+        `<span class="ort-score-badge">+${score}</span>`;
+      html += `<div class="ort-item">
+        <div class="ort-item-text">${item.label}</div>
+        ${scoreDisplay}
+        <div class="ort-checkbox-wrap">
+          <input type="checkbox" class="ort-cb" id="${item.id}" ${score === 0 ? 'disabled' : ''}>
+          <label for="${item.id}" style="font-size:12px;color:var(--muted);cursor:pointer;">Sí</label>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+  document.getElementById('ort-calc-btn').style.display = 'inline-flex';
+  document.getElementById('ort-reset-btn').style.display = 'inline-flex';
+  document.getElementById('ort-result').style.display = 'none';
+}
+
+function calcORT() {
+  const sexEl = document.querySelector('input[name="ort_sex"]:checked');
+  if (!sexEl) { alert('Seleccione el sexo del paciente.'); return; }
+  const sex = sexEl.value;
+  let total = 0;
+  ORT_ITEMS.forEach(section => {
+    section.items.forEach(item => {
+      const score = sex === 'F' ? item.scoreF : item.scoreM;
+      const cb = document.getElementById(item.id);
+      if (cb && cb.checked && score > 0) total += score;
+    });
+  });
+  let cls, label, desc, action;
+  if (total <= 3) {
+    cls='res-green'; label='Riesgo Bajo';
+    desc=`Puntuación total: ${total}. El paciente presenta un perfil de bajo riesgo para conductas aberrantes asociadas a opioides.`;
+    action='Se pueden usar analgésicos opioides con seguimiento estándar.';
+  } else if (total <= 7) {
+    cls='res-amber'; label='Riesgo Moderado';
+    desc=`Puntuación total: ${total}. Se pueden usar analgésicos opioides con una monitorización cuidadosa y seguimiento adecuado.`;
+    action='Monitorización cuidadosa: controles frecuentes, toxicología periódica, acuerdos terapéuticos escritos.';
+  } else {
+    cls='res-red'; label='Riesgo Alto';
+    desc=`Puntuación total: ${total}. En este caso, si es posible, evitar el uso de analgésicos opioides.`;
+    action='Evaluar alternativas analgésicas no opioides. Si es imprescindible el opioide, manejo interdisciplinario con psiquiatría, seguimiento muy estrecho y toxicología frecuente.';
+  }
+  showResult('ort-result', total, cls, label, desc, action);
+}
+
+// ── Reset clinical tool ───────────────────────────────────────
+function resetClinical(tool) {
+  if (tool === 'soapp') {
+    for (let i = 0; i < 24; i++)
+      document.querySelectorAll(`#opts-soapp-${i} .scale-opt`).forEach(b => b.classList.remove('selected'));
+    updateCount('soapp');
+  } else if (tool === 'comm') {
+    for (let i = 0; i < 17; i++)
+      document.querySelectorAll(`#opts-comm-${i} .scale-opt`).forEach(b => b.classList.remove('selected'));
+    updateCount('comm');
+  } else if (tool === 'ort') {
+    document.querySelectorAll('.ort-cb').forEach(cb => cb.checked = false);
+    document.querySelectorAll('input[name="ort_sex"]').forEach(r => r.checked = false);
+    document.getElementById('ort-questions').innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">Seleccione el sexo del paciente para mostrar el formulario.</p>';
+    document.getElementById('ort-calc-btn').style.display = 'none';
+    document.getElementById('ort-reset-btn').style.display = 'none';
+    document.querySelectorAll('input[name="ort_sex"]').forEach(r => r.closest('.itc-opt')?.classList.remove('selected'));
+  }
+  const el = document.getElementById(`${tool}-result`);
+  if (el) { el.style.display = 'none'; el.innerHTML = ''; }
+}
+
+// ── Init on stage show ────────────────────────────────────────
+const _origShowStage = window._origShowStage || null;
+document.addEventListener('DOMContentLoaded', () => {
+  // Patch showStage to init scales when tab 7 is opened
+  const origShowStage = window.showStage;
+  if (origShowStage) {
+    window.showStage = function(index, btn) {
+      origShowStage(index, btn);
+      if (index === 7) { initSOAPP(); initCOMM(); }
+    };
+  }
+});
+</script>
+</body>
+</html>
