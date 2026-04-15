@@ -1,13 +1,13 @@
-<body>
-
 <script>
-var password = "consumo*";
-var input = prompt("Ingrese la clave de acceso:");
+document.addEventListener("DOMContentLoaded", function() {
+  var password = "consumo*";
+  var input = prompt("Ingrese la clave de acceso:");
 
-if (input === null || input !== password) {
-    alert("Acceso denegado");
-    window.location = "https://google.com";
-}
+  if (input === null || input !== password) {
+      alert("Acceso denegado");
+      window.location.href = "https://google.com";
+  }
+});
 </script>
 <!DOCTYPE html>
 <html lang="es">
